@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:volun_tek/src/constants/colors.dart';
+import 'package:volun_tek/src/routing/routes.dart';
 
+import '../../../../common_widgets/tek_elevated_button.dart';
 import 'refactored/interest_card.dart';
 
-class Interest extends StatelessWidget {
-  Interest({super.key});
+class Interest extends StatefulWidget {
+  const Interest({super.key});
 
+  @override
+  State<Interest> createState() => _InterestState();
+}
+
+class _InterestState extends State<Interest> {
   final images = [
     'assets/images/img1.png',
     'assets/images/img2.png',
-    'assets/images/img3.png',
     'assets/images/img4.png',
+    'assets/images/img3.png',
     'assets/images/img5.png',
     'assets/images/img6.png',
     'assets/images/img7.png',
@@ -19,23 +26,26 @@ class Interest extends StatelessWidget {
   ];
 
   final titles = [
-    'Interest 0',
-    'Interest 1',
-    'Interest 2',
-    'Interest 3',
-    'Interest 4',
-    'Interest 5',
-    'Interest 6',
-    'Interest 7',
+    'Elder Care',
+    'Animal Welfare',
+    'Social Service',
+    'Education',
+    'Environment',
+    'Art % Culture',
+    'International Development',
+    'Healthcare',
   ];
+
+  final interests = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: 32.0,
-          vertical: 32.0 + MediaQuery.of(context).padding.top,
+        padding: EdgeInsets.only(
+          left: 32.0,
+          right: 32.0,
+          top: 32.0 + MediaQuery.of(context).padding.top,
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -63,6 +73,7 @@ class Interest extends StatelessWidget {
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 16,
+                  mainAxisExtent: 190,
                   mainAxisSpacing: 24,
                 ),
                 itemCount: titles.length,
@@ -72,13 +83,28 @@ class Interest extends StatelessWidget {
                   return InterestCard(
                     title: titles.elementAt(index),
                     image: images.elementAt(index),
+                    isSelected: interests.contains(titles.elementAt(index)),
+                    onPressed: () {
+                      setState(() {
+                        if (interests.contains(titles.elementAt(index))) {
+                          interests.remove(titles.elementAt(index));
+                        } else {
+                          interests.add(titles.elementAt(index));
+                        }
+                      });
+                    },
                   );
                 },
               ),
-              ElevatedButton(
-                onPressed: ()=> Navigator.pushNamed(context, '/onboarding'),
-                child: Text('Submit'),
-              )
+              const SizedBox(height: 32),
+              TekElevatedButton(
+                title: 'Submit',
+                onPressed: interests.isEmpty
+                    ? () {}
+                    : () => Navigator.pushNamed(context, login),
+                buttonColor: interests.isEmpty ? kBlueAccent : kBlue,
+              ),
+              const SizedBox(height: 56),
             ],
           ),
         ),

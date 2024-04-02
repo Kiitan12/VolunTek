@@ -8,13 +8,14 @@ import 'package:volun_tek/src/features/authentication/presentation/widget/reset_
 import 'package:volun_tek/src/features/authentication/presentation/widget/sign_up.dart';
 
 import '../features/authentication/presentation/widget/login.dart';
+import '../features/authentication/presentation/widget/onboarding.dart';
 import 'routes.dart';
 
 class RouteGenerator {
   Route? routeGenerate(RouteSettings route) {
     switch (route.name) {
       case splashRoot:
-        return navigateToRoute(const Login());
+        return navigateToRoute(const Onboarding());
       case interest:
         return navigateToRoute(Interest());
       case login:

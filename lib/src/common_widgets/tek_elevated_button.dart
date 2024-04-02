@@ -8,10 +8,12 @@ class TekElevatedButton extends StatelessWidget {
     super.key,
     required this.title,
     required this.onPressed,
+    this.buttonColor,
   });
 
   final String title;
   final VoidCallback onPressed;
+  final Color? buttonColor;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class TekElevatedButton extends StatelessWidget {
         child: ElevatedButton(
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
-            backgroundColor: kBlue,
+            backgroundColor: buttonColor ?? kBlue,
             foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(40),

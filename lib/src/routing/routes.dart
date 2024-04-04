@@ -10,3 +10,5 @@ const String login = '/login';
 const String signup = '/signup';
 const String confirmMail = '/confirm-email';
 const String resetPassword = '/reset-password';
+const String bottomNavigation = '/bottom-navigation';
+const String home = '/home';

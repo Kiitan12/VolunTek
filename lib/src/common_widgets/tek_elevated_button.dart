@@ -6,13 +6,13 @@ import '../constants/colors.dart';
 class TekElevatedButton extends StatelessWidget {
   const TekElevatedButton({
     super.key,
-    required this.title,
+     this.title,
     required this.onPressed,
     this.buttonColor,
     this.child,
   });
 
-  final String title;
+  final String? title;
   final VoidCallback onPressed;
   final Color? buttonColor;
   final Widget? child;
@@ -32,7 +32,7 @@ class TekElevatedButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(40),
             ),
           ),
-          child: child ?? Text(title, style: AppStyle.kRegular16),
+          child: child ?? Text(title ?? '', style: AppStyle.kRegular16),
         ),
       ),
     );

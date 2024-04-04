@@ -7,8 +7,10 @@ import 'package:volun_tek/src/features/authentication/presentation/widget/confir
 import 'package:volun_tek/src/features/authentication/presentation/widget/interest.dart';
 import 'package:volun_tek/src/features/authentication/presentation/widget/reset_password.dart';
 import 'package:volun_tek/src/features/authentication/presentation/widget/sign_up.dart';
+import 'package:volun_tek/src/features/home/presentation/widget/bottom_navigation.dart';
 import 'package:volun_tek/src/utils/validation_helper.dart';
 
+import '../features/authentication/presentation/controller/sign_in_controller.dart';
 import '../features/authentication/presentation/controller/sign_up_controller.dart';
 import '../features/authentication/presentation/widget/login.dart';
 import 'routes.dart';
@@ -17,11 +19,21 @@ class RouteGenerator {
   Route? routeGenerate(RouteSettings route) {
     switch (route.name) {
       case splashRoot:
-        return navigateToRoute(const Login());
+        return navigateToRoute(
+          Login(
+            validationHelper: ValidationHelper(),
+            controller: SignInController(),
+          ),
+        );
       case interest:
         return navigateToRoute(const Interest());
       case login:
-        return navigateToRoute(const Login());
+        return navigateToRoute(
+          Login(
+            validationHelper: ValidationHelper(),
+            controller: SignInController(),
+          ),
+        );
       case signup:
         return navigateToRoute(
           SignUp(
@@ -38,6 +50,8 @@ class RouteGenerator {
             controller: ResetPasswordController(),
           ),
         );
+      case bottomNavigation:
+        return navigateToRoute(const BottomNavigation());
     }
     return null;
   }

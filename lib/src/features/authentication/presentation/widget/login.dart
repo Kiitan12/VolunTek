@@ -44,7 +44,7 @@ class Login extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerRight,
                   child: InkWell(
-                    onTap: () => Navigator.pushNamed(context, confirmMail),
+                    onTap: () => Navigator.pushNamed(context, resetPassword),
                     child: Text(
                       'Forgot your password?',
                       style: AppStyle.kRegular12,

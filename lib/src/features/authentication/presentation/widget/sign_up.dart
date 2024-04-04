@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:volun_tek/src/common_widgets/tek_password_field.dart';
 
 import '../../../../common_widgets/tek_elevated_button.dart';
 import '../../../../common_widgets/tek_text_field.dart';
@@ -26,11 +25,10 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -50,7 +48,7 @@ class _SignUpState extends State<SignUp> {
         padding: const EdgeInsets.only(left: 28, right: 28, bottom: 20),
         child: SingleChildScrollView(
           child: Form(
-            key: formKey,
+            key: widget.controller.formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -65,7 +63,7 @@ class _SignUpState extends State<SignUp> {
                 Text('Name', style: AppStyle.kRegular20),
                 const SizedBox(height: 4),
                 TekTextField(
-                  controller: name,
+                  inputController: widget.controller.name,
                   validator: (value) {
                     return widget.validationHelper.validateField(value!);
                   },
@@ -74,7 +72,7 @@ class _SignUpState extends State<SignUp> {
                 Text('Email', style: AppStyle.kRegular20),
                 const SizedBox(height: 4),
                 TekTextField(
-                  controller: email,
+                  inputController: widget.controller.email,
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     return widget.validationHelper.validateEmail(value!);
@@ -84,9 +82,15 @@ class _SignUpState extends State<SignUp> {
                 Text('Password', style: AppStyle.kRegular20),
                 const SizedBox(height: 4),
                 Consumer(builder: (context, ref, child) {
-                  return TekPasswordField(
-                    hintText: '********',
-                    controller: password,
+                  return TekTextField(
+                    hint: '********',
+                    obscureText: ref.watch(hidePasswordProvider),
+                    keyboardType: TextInputType.visiblePassword,
+                    onPressedSuffixIcon: () {
+                      ref.read(hidePasswordProvider.notifier).state =
+                          !ref.read(hidePasswordProvider.notifier).state;
+                    },
+                    inputController: widget.controller.password,
                     validator: (value) {
                       return widget.validationHelper.validatePassword(value!);
                     },
@@ -99,36 +103,38 @@ class _SignUpState extends State<SignUp> {
                 Text('Confirm Password', style: AppStyle.kRegular20),
                 const SizedBox(height: 4),
                 Consumer(builder: (context, ref, child) {
-                  return TekPasswordField(
-                    hintText: '********',
-                    controller: password2,
-                    validator: (value) => widget.validationHelper
-                        .validatePassword2(
-                            value!, ref.watch(passwordMismatchProvider)),
-                  );
+                  return TekTextField(
+                      hint: '********',
+                      keyboardType: TextInputType.visiblePassword,
+                      obscureText: ref.watch(hidePasswordProvider),
+                      onPressedSuffixIcon: () {
+                        ref.read(hidePasswordProvider.notifier).state =
+                            !ref.read(hidePasswordProvider.notifier).state;
+                      },
+                      inputController: widget.controller.password2,
+                      validator: (value) {
+                        return widget.validationHelper.validatePassword2(
+                          value!,
+                          ref.watch(passwordMismatchProvider),
+                        );
+                      });
                 }),
                 const SizedBox(height: 32),
                 Consumer(builder: (context, ref, child) {
                   return TekElevatedButton(
                     title: 'Sign Up',
-                    child: isLoading
+                    child: ref.watch(signUpProvider)
                         ? const CircularProgressIndicator(
                             color: Colors.white,
                           )
-                        : Text('Sign Up2', style: AppStyle.kRegular16),
+                        : Text('Sign Up', style: AppStyle.kRegular16),
                     onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        print('Email: ${email.text.trim()}');
-                        print('Non related');
-
-                        print(email.text);
-                        print(password.text);
-                        print(name.text);
-                        firebaseService.signUpWithEmailAndPassword(
-                          email: email.text.trim(),
-                          password: password.text.trim(),
-                          name: name.text.trim(),
-                        );
+                      if (widget.controller.formKey.currentState!.validate()) {
+                        ref.read(signUpProvider.notifier).signUpWithEmail(
+                              email: widget.controller.email.text.trim(),
+                              password: widget.controller.password.text.trim(),
+                              name: widget.controller.name.text.trim(),
+                            );
                       }
                     },
                   );

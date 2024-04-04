@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:volun_tek/src/features/authentication/presentation/controller/reset_password_controller.dart';
 import 'package:volun_tek/src/features/authentication/presentation/widget/confirm_email.dart';
 import 'package:volun_tek/src/features/authentication/presentation/widget/interest.dart';
 import 'package:volun_tek/src/features/authentication/presentation/widget/reset_password.dart';
@@ -10,7 +11,6 @@ import 'package:volun_tek/src/utils/validation_helper.dart';
 
 import '../features/authentication/presentation/controller/sign_up_controller.dart';
 import '../features/authentication/presentation/widget/login.dart';
-import '../features/authentication/presentation/widget/onboarding.dart';
 import 'routes.dart';
 
 class RouteGenerator {
@@ -32,7 +32,12 @@ class RouteGenerator {
       case confirmMail:
         return navigateToRoute(const ConfirmMail());
       case resetPassword:
-        return navigateToRoute(const ResetPassword());
+        return navigateToRoute(
+          ResetPassword(
+            validationHelper: ValidationHelper(),
+            controller: ResetPasswordController(),
+          ),
+        );
     }
     return null;
   }

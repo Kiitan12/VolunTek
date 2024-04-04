@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'firebase_options.dart';
+import 'globals.dart';
 import 'src/routing/router.dart';
 import 'src/routing/routes.dart';
 
@@ -29,6 +30,8 @@ class MyApp extends StatelessWidget {
       title: 'VolunTek',
       initialRoute: splashRoot,
       onGenerateRoute: router.routeGenerate,
+      scaffoldMessengerKey: snackBarKey,
+      navigatorKey: navigatorKey,
     );
   }
 }

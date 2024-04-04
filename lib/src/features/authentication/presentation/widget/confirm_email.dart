@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../common_widgets/tek_elevated_button.dart';
 import '../../../../common_widgets/tek_text_field.dart';
 import '../../../../constants/app_style.dart';
+import '../../../../constants/colors.dart';
 import '../../../../routing/routes.dart';
 
 class ConfirmMail extends StatelessWidget {
@@ -11,8 +12,9 @@ class ConfirmMail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: kBackgroundColor,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),

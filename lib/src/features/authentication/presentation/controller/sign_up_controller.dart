@@ -6,6 +6,4 @@ class SignUpController {
   final email = TextEditingController();
   final password = TextEditingController();
   final password2 = TextEditingController();
-
- // final firebaseService = SignUpService(FirebaseAuth.instance);
 }

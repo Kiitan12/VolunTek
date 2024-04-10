@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:volun_tek/globals.dart';
 import 'package:volun_tek/src/routing/routes.dart';
@@ -24,6 +25,12 @@ class SignInService extends StateNotifier<bool> {
       state = false;
     } on FirebaseAuthException catch (e) {
       state = false;
+      snackBarKey.currentState!.showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.message ?? 'An error occurred'),
+        ),
+      );
       throw e.message ?? 'An error occurred';
     }
   }

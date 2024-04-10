@@ -22,6 +22,14 @@ class AppStyle {
     color: Colors.white,
   );
 
+
+  static TextStyle kRegular14 = GoogleFonts.dmSerifDisplay(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: Colors.white,
+  );
+
+
   static TextStyle kRegular12 = GoogleFonts.dmSerifDisplay(
     fontSize: 12,
     fontWeight: FontWeight.w400,

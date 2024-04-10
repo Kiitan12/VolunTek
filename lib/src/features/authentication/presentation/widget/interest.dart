@@ -6,14 +6,14 @@ import 'package:volun_tek/src/routing/routes.dart';
 import '../../../../common_widgets/tek_elevated_button.dart';
 import 'refactored/interest_card.dart';
 
-class Interest extends StatefulWidget {
-  const Interest({super.key});
+class InterestPage extends StatefulWidget {
+  const InterestPage({super.key});
 
   @override
-  State<Interest> createState() => _InterestState();
+  State<InterestPage> createState() => _InterestPageState();
 }
 
-class _InterestState extends State<Interest> {
+class _InterestPageState extends State<InterestPage> {
   final images = [
     'assets/images/img1.png',
     'assets/images/img2.png',

@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:volun_tek/src/constants/app_style.dart';
 import 'package:volun_tek/src/constants/colors.dart';
 
+import '../../../../routing/routes.dart';
 import '../../application/services/task_services.dart';
 import '../provider/task_provider.dart';
 import 'refactored/interest.dart';
@@ -27,7 +28,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 32),
+          padding: const EdgeInsets.only(top: 32),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +58,9 @@ class _HomeState extends State<Home> {
                       SizedBox(
                         height: 36,
                         child: TextFormField(
-                          onChanged: (value) async {},
+                          onTap: (){
+                            Navigator.pushNamed(context, search);
+                          },
                           decoration: InputDecoration(
                             hintText: 'whats your interest today?',
                             hintStyle: AppStyle.kRegular12.copyWith(color: kSilver),
@@ -78,10 +81,14 @@ class _HomeState extends State<Home> {
                       const SizedBox(height: 28),
                       SelectableFilterTag(
                         titles: filters,
-                        onSelectionChanged: (index) =>
-                            print('Selected index: ${filters[index]}'),
+                        onSelectionChanged: (index) {
+                          print('Selected: $index');
+                        },
                       ),
                       const SizedBox(height: 20),
+                      Container(
+
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -136,8 +143,6 @@ class _HomeState extends State<Home> {
                           viewportFraction: 0.75,
                           enableInfiniteScroll: false,
                           enlargeCenterPage: false,
-
-
                           autoPlay: true,
                         ),
                         itemBuilder: (context, index, realIndex) {
@@ -184,6 +189,10 @@ class _HomeState extends State<Home> {
                               itemBuilder: (context, index) {
                                 return TaskCard(
                                   task: data[index],
+                                  onTap: (){
+                                    ref.read(taskProvider.notifier).state = data[index];
+                                    Navigator.pushNamed(context,opportunityView);
+                                  },
                                 );
                               },
                               separatorBuilder: (BuildContext context, int index) {

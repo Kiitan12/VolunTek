@@ -9,6 +9,7 @@ import 'package:volun_tek/src/features/authentication/presentation/widget/reset_
 import 'package:volun_tek/src/features/authentication/presentation/widget/sign_up.dart';
 import 'package:volun_tek/src/features/home/presentation/widget/bottom_navigation.dart';
 import 'package:volun_tek/src/features/home/presentation/widget/home.dart';
+import 'package:volun_tek/src/features/home/presentation/widget/opportunity_view.dart';
 import 'package:volun_tek/src/utils/validation_helper.dart';
 
 import '../../logging_state.dart';
@@ -16,6 +17,7 @@ import '../features/authentication/presentation/controller/sign_in_controller.da
 import '../features/authentication/presentation/controller/sign_up_controller.dart';
 import '../features/authentication/presentation/widget/login.dart';
 import '../features/authentication/presentation/widget/onboarding.dart';
+import '../features/search/presentation/widget/search.dart';
 import 'routes.dart';
 
 class RouteGenerator {
@@ -56,6 +58,10 @@ class RouteGenerator {
         return navigateToRoute(const Home());
       case loggingState:
         return navigateToRoute(const LoggingState());
+      case search:
+        return navigateToRoute(const Search());
+      case opportunityView:
+        return navigateToRoute(const OpportunityView());
     }
     return null;
   }

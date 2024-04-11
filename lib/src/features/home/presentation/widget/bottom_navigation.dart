@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:volun_tek/src/constants/colors.dart';
 
+import '../../../search/presentation/widget/search.dart';
 import 'home.dart';
 
 var indexProvider = StateProvider<int>((ref) => 0);
@@ -13,54 +15,46 @@ class BottomNavigation extends ConsumerStatefulWidget {
 }
 
 class _BottomNavigationState extends ConsumerState<BottomNavigation> {
+  int index = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: ref.watch(indexProvider),
-        children: const [
-          Home(),
-          Center(child: Text('Search')),
-          Center(child: Text('Community')),
-          Center(child: Text('Profile')),
-        ],
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
-        child: SizedBox(
-          height: 24,
-          width: MediaQuery.of(context).size.width,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.home,
-                  color: ref.watch(indexProvider) == 0
-                      ? Colors.blue
-                      : Colors.grey,
-                ),
-                Icon(
-                  Icons.search,
-                  color: ref.watch(indexProvider) == 1
-                      ? Colors.blue
-                      : Colors.grey,
-                ),
-                Icon(
-                  Icons.people,
-                  color: ref.watch(indexProvider) == 2
-                      ? Colors.blue
-                      : Colors.grey,
-                ),
-                Icon(
-                  Icons.person,
-                  color: ref.watch(indexProvider) == 3
-                      ? Colors.blue
-                      : Colors.grey,
-                ),
-              ],
+      body: [
+        const Home(),
+        const Search(),
+        Container(color: kGray85),
+        Container(color: kGray85),
+      ][index],
+      bottomNavigationBar: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          backgroundColor: kGray85,
+          indicatorColor: Colors.transparent,
+        ),
+        child: NavigationBar(
+          height: 72,
+          selectedIndex: index,
+          onDestinationSelected: (int index) {
+            setState(() => this.index = index);
+          },
+          destinations: [
+            NavigationDestination(
+              icon: Icon(Icons.home),
+              label: '',
             ),
-          ),
+            NavigationDestination(
+              icon: Icon(Icons.search),
+              label: '',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.people),
+              label: '',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.person_outline),
+              label: '',
+            ),
+          ],
         ),
       ),
     );

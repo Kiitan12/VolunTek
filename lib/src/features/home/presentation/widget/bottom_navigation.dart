@@ -18,7 +18,7 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation> {
     return Scaffold(
       body: IndexedStack(
         index: ref.watch(indexProvider),
-        children: [
+        children: const [
           Home(),
           Center(child: Text('Search')),
           Center(child: Text('Community')),
@@ -28,10 +28,10 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation> {
       bottomNavigationBar: BottomAppBar(
         color: Colors.white,
         child: SizedBox(
-          height: 56,
+          height: 24,
           width: MediaQuery.of(context).size.width,
           child: Padding(
-            padding: const EdgeInsets.only(left: 50, right: 50),
+            padding: const EdgeInsets.only(left: 20, right: 20),
             child: Row(
               children: [
                 Icon(

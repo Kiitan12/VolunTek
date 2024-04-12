@@ -21,7 +21,8 @@ class _SearchState extends State<Search> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading:
+            (ModalRoute.of(context)?.canPop) == true ? true : false,
         centerTitle: true,
         title: const Text('Search'),
       ),
@@ -32,6 +33,7 @@ class _SearchState extends State<Search> {
             SizedBox(
               height: 60,
               child: TextFormField(
+                autofocus: true,
                 onChanged: (value) async {
                   setState(() => name = value);
                 },
@@ -74,9 +76,13 @@ class _SearchState extends State<Search> {
                               return TaskCard(task: data[index]);
                             }
                             if (data[index]
-                                .title
-                                .toLowerCase()
-                                .contains(name.toLowerCase())) {
+                                    .title
+                                    .toLowerCase()
+                                    .contains(name.toLowerCase()) ||
+                                data[index]
+                                    .interest
+                                    .toLowerCase()
+                                    .contains(name.toLowerCase())) {
                               return TaskCard(task: data[index]);
                             }
 

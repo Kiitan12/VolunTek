@@ -24,12 +24,12 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        return android;
-      case TargetPlatform.iOS:
         throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
+          'DefaultFirebaseOptions have not been configured for android - '
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
+      case TargetPlatform.iOS:
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -52,11 +52,12 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDy0FqsQdbQAo8UO98pQ37USPsxlvZcWfA',
-    appId: '1:283636591280:android:6e04be248fe5fcb78ee975',
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyA40ij2mGY82GeyixIcidpO9Lp7HyFnRdw',
+    appId: '1:283636591280:ios:1f1913a11807ebc98ee975',
     messagingSenderId: '283636591280',
     projectId: 'volun-tek',
     storageBucket: 'volun-tek.appspot.com',
+    iosBundleId: 'com.volunteer.tek',
   );
 }

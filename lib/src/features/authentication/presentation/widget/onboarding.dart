@@ -33,7 +33,7 @@ class _OnboardingState extends State<Onboarding> {
     await Future.delayed(const Duration(milliseconds: 2000), () {});
     initScreen == 0 || initScreen == null
         ? navigatorKey.currentState!.pushNamed(signup) :
-        navigatorKey.currentState!.pushNamed(loggingState);
+        navigatorKey.currentState!.pushNamedAndRemoveUntil(loggingState, (route) => false);
 
 
   }

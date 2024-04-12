@@ -26,191 +26,195 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 32),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 28.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CircleAvatar(
-                            radius: 24,
-                            backgroundImage: AssetImage('assets/images/profile.png'),
-                          ),
-                          CircleAvatar(
-                            radius: 24,
-                            backgroundColor: kYellow,
-                            child: Icon(Icons.notifications_outlined),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Text('Discover', style: AppStyle.kHeading1),
-                      const SizedBox(height: 28),
-                      SizedBox(
-                        height: 36,
-                        child: TextFormField(
-                          onTap: (){
-                            Navigator.pushNamed(context, search);
-                          },
-                          decoration: InputDecoration(
-                            hintText: 'whats your interest today?',
-                            hintStyle: AppStyle.kRegular12.copyWith(color: kSilver),
-                            filled: true,
-                            fillColor: kGray85,
-                            suffixIcon: const Icon(Icons.search, color: kSilver),
-                            contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 20),
-                            border: AppStyle.kNoBorder,
-                            enabledBorder: AppStyle.kNoBorder,
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: const BorderSide(color: kSilver),
-                            ),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 32),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 28.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CircleAvatar(
+                          radius: 24,
+                          backgroundImage:
+                              AssetImage('assets/images/profile.png'),
+                        ),
+                        CircleAvatar(
+                          radius: 24,
+                          backgroundColor: kYellow,
+                          child: Icon(Icons.notifications_outlined),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Text('Discover', style: AppStyle.kHeading1),
+                    const SizedBox(height: 28),
+                    SizedBox(
+                      height: 36,
+                      child: TextFormField(
+                        onTap: () {
+                          Navigator.pushNamed(context, search);
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'whats your interest today?',
+                          hintStyle:
+                              AppStyle.kRegular12.copyWith(color: kSilver),
+                          filled: true,
+                          fillColor: kGray85,
+                          suffixIcon:
+                              const Icon(Icons.search, color: kSilver),
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 20),
+                          border: AppStyle.kNoBorder,
+                          enabledBorder: AppStyle.kNoBorder,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: const BorderSide(color: kSilver),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 28),
-                      SelectableFilterTag(
-                        titles: filters,
-                        onSelectionChanged: (index) {
-                          print('Selected: $index');
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      Container(
-
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Search by Cause',
-                            style: AppStyle.kRegular20,
-                          ),
-                          const Icon(Icons.arrow_forward)
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      GridView.builder(
-                        itemCount: 6,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                          childAspectRatio: 2.0,
+                    ),
+                    const SizedBox(height: 28),
+                    SelectableFilterTag(
+                      titles: filters,
+                      onSelectionChanged: (index) {
+                        print('Selected: $index');
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    Container(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Search by Cause',
+                          style: AppStyle.kRegular20,
                         ),
-                        itemBuilder: (context, index) {
-                          return const Interest(
-                            title: 'Education',
-                          );
-                        },
+                        const Icon(Icons.arrow_forward)
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    GridView.builder(
+                      itemCount: 6,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                        childAspectRatio: 2.0,
                       ),
-                      const SizedBox(height: 24),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Trending',
-                            style: AppStyle.kRegular20,
-                          ),
-                          const Icon(Icons.arrow_forward)
-                        ],
-                      ),
-                    ],
-                  ),
+                      itemBuilder: (context, index) {
+                        return const Interest(
+                          title: 'Education',
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Trending',
+                          style: AppStyle.kRegular20,
+                        ),
+                        const Icon(Icons.arrow_forward)
+                      ],
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 24),
-                Consumer(builder: (context, ref, child) {
-                  final task = ref.watch(getTrendingTask);
+              ),
+              const SizedBox(height: 24),
+              Consumer(builder: (context, ref, child) {
+                final task = ref.watch(getTrendingTask);
 
-                  return task.when(
-                    data: (data) {
-                      return CarouselSlider.builder(
-                        itemCount: data.length,
-                        options: CarouselOptions(
-                          height: 234,
-                          viewportFraction: 0.75,
-                          enableInfiniteScroll: false,
-                          enlargeCenterPage: false,
-                          autoPlay: true,
+                return task.when(
+                  data: (data) {
+                    return CarouselSlider.builder(
+                      itemCount: data.length,
+                      options: CarouselOptions(
+                        height: 234,
+                        viewportFraction: 0.75,
+                        enableInfiniteScroll: false,
+                        enlargeCenterPage: false,
+                        autoPlay: true,
+                      ),
+                      itemBuilder: (context, index, realIndex) {
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 18.0),
+                          child: TaskCard(
+                            task: data[index],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (error, stackTrace) {
+                    return Text('Error: $error');
+                  },
+                );
+              }),
+              const SizedBox(height: 32),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 28.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Recommended',
+                          style: AppStyle.kRegular20,
                         ),
-                        itemBuilder: (context, index, realIndex) {
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 18.0),
-                            child: TaskCard(
-                              task: data[index],
-                            ),
+                        const Icon(Icons.arrow_forward)
+                      ],
+                    ),
+                    const SizedBox(height: 28),
+                    Consumer(builder: (context, ref, child) {
+                      final task = ref.watch(getTrendingTask);
+
+                      return task.when(
+                        data: (data) {
+                          return ListView.separated(
+                            itemCount: data.length,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return TaskCard(
+                                task: data[index],
+                                onTap: () {
+                                  ref.read(taskProvider.notifier).state =
+                                      data[index];
+                                  Navigator.pushNamed(
+                                      context, opportunityView);
+                                },
+                              );
+                            },
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                              return const SizedBox(height: 20);
+                            },
                           );
+                        },
+                        loading: () => const CircularProgressIndicator(),
+                        error: (error, stackTrace) {
+                          return Text('Error: $error');
                         },
                       );
-                    },
-                    loading: () => const CircularProgressIndicator(),
-                    error: (error, stackTrace) {
-                      return Text('Error: $error');
-                    },
-                  );
-                }),
-                const SizedBox(height: 32),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 28.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Recommended',
-                            style: AppStyle.kRegular20,
-                          ),
-                          const Icon(Icons.arrow_forward)
-                        ],
-                      ),
-                      const SizedBox(height: 28),
-                      Consumer(builder: (context, ref, child) {
-                        final task = ref.watch(getTrendingTask);
-
-                        return task.when(
-                          data: (data) {
-                            return ListView.separated(
-                              itemCount: data.length,
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                return TaskCard(
-                                  task: data[index],
-                                  onTap: (){
-                                    ref.read(taskProvider.notifier).state = data[index];
-                                    Navigator.pushNamed(context,opportunityView);
-                                  },
-                                );
-                              },
-                              separatorBuilder: (BuildContext context, int index) {
-                                return const SizedBox(height: 20);
-                              },
-                            );
-                          },
-                          loading: () => const CircularProgressIndicator(),
-                          error: (error, stackTrace) {
-                            return Text('Error: $error');
-                          },
-                        );
-                      }),
-                    ],
-                  ),
+                    }),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

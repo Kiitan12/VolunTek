@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -26,14 +28,16 @@ void main() async {
 
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  final apnsToken = await messaging.getAPNSToken();
-  if (apnsToken != null) {
-    // APNS token is available, make FCM plugin API requests...
+  if(Platform.isIOS){
+    final apnsToken = await messaging.getAPNSToken();
+    if (apnsToken != null) {
+      // APNS token is available, make FCM plugin API requests...
+      print("Firebase messaging token: ${await messaging.getToken()}");
+    }
+  }else{
     print("Firebase messaging token: ${await messaging.getToken()}");
   }
 
-  //TODO: Make it platform specific
-  print("Firebase messaging token: ${await messaging.getToken()}");
 
   // print("FCM Token: $fcmToken");
   NotificationSettings settings = await messaging.requestPermission(

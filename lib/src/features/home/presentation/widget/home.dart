@@ -8,7 +8,6 @@ import '../../../../routing/routes.dart';
 import '../../application/services/task_services.dart';
 import '../provider/task_provider.dart';
 import 'refactored/interest.dart';
-import 'refactored/selectable_filter_tag.dart';
 import 'refactored/task_card.dart';
 
 class Home extends StatefulWidget {
@@ -18,10 +17,18 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
   final filters = ['All', 'Time', 'Location', 'Skills'];
 
   TaskServices taskServices = TaskServices();
+
+  late TabController tabController;
+
+  @override
+  void initState() {
+    tabController = TabController(length: 3, vsync: this);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,12 +88,36 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     const SizedBox(height: 28),
-                    SelectableFilterTag(
-                      titles: filters,
-                      onSelectionChanged: (index) {
-                        print('Selected: $index');
-                      },
+                    TabBar(
+                      controller: tabController,
+                      indicatorColor: Colors.transparent,
+                      indicator: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: kYellow,
+                      ),
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      labelColor: kDarkBlue,
+                      unselectedLabelColor: kGray16,
+                      tabs: const [
+                        Tab(text: 'All'),
+                        Tab(text: 'Time'),
+                        Tab(text: 'Skills'),
+                      ],
                     ),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      height: 100,
+                      width: double.infinity,
+                      child: TabBarView(
+                        controller: tabController,
+                          children: const [
+                        Text('All'),
+                        Text('Time'),
+                        Text('Skills'),
+                      ]),
+                    ),
+
+
                     const SizedBox(height: 20),
                     Container(),
                     Row(
@@ -99,7 +130,6 @@ class _HomeState extends State<Home> {
                         const Icon(Icons.arrow_forward)
                       ],
                     ),
-                    const SizedBox(height: 16),
                     GridView.builder(
                       itemCount: 6,
                       shrinkWrap: true,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:volun_tek/src/routing/routes.dart';
 
 import '../../../../common_widgets/tek_elevated_button.dart';
 import '../../../../common_widgets/tek_text_field.dart';
@@ -120,41 +121,48 @@ class _SignUpState extends State<SignUp> {
                       });
                 }),
                 const SizedBox(height: 32),
-                Consumer(builder: (context, ref, child) {
-                  return TekElevatedButton(
-                    title: 'Sign Up',
-                    child: ref.watch(signUpProvider)
-                        ? const CircularProgressIndicator(
-                            color: Colors.white,
-                          )
-                        : Text('Sign Up', style: AppStyle.kRegular16),
-                    onPressed: () {
-                      if (widget.controller.formKey.currentState!.validate()) {
-                        ref.read(signUpProvider.notifier).signUpWithEmail(
-                              email: widget.controller.email.text.trim(),
-                              password: widget.controller.password.text.trim(),
-                              name: widget.controller.name.text.trim(),
-                            );
-                      }
-                    },
-                  );
-                }),
+                Consumer(
+                  builder: (context, ref, child) {
+                    return TekElevatedButton(
+                      title: 'Sign Up',
+                      child: ref.watch(signUpProvider)
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : Text('Sign Up', style: AppStyle.kRegular16),
+                      onPressed: () {
+                        if (widget.controller.formKey.currentState!
+                            .validate()) {
+                          ref.read(signUpProvider.notifier).signUpWithEmail(
+                                email: widget.controller.email.text.trim(),
+                                password:
+                                    widget.controller.password.text.trim(),
+                                name: widget.controller.name.text.trim(),
+                              );
+                        }
+                      },
+                    );
+                  },
+                ),
                 const SizedBox(height: 20),
                 Center(
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Have an account? ',
-                      style: AppStyle.kRegular12,
-                      children: [
-                        TextSpan(
-                          text: 'Sign in',
-                          style: GoogleFonts.dmSerifDisplay(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: kBlue,
+                  child: InkWell(
+                    onTap: ()=> Navigator.pushNamed(context, login) , // Add this line),
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Have an account? ',
+                        style: AppStyle.kRegular12,
+                        children: [
+                          TextSpan(
+                            text: 'Sign in',
+                            style: GoogleFonts.dmSerifDisplay(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: kBlue,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

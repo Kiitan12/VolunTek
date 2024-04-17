@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:volun_tek/src/constants/colors.dart';
+import 'package:volun_tek/src/features/profile/presentation/widget/profile.dart';
 
 import '../../../search/presentation/widget/search.dart';
 import 'home.dart';
@@ -24,10 +25,10 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation> {
         const Home(),
         const Search(),
         Container(color: kGray85),
-        Container(color: kGray85),
+        const Profile()
       ][index],
       bottomNavigationBar: NavigationBarTheme(
-        data: NavigationBarThemeData(
+        data: const NavigationBarThemeData(
           backgroundColor: kGray85,
           indicatorColor: Colors.transparent,
         ),

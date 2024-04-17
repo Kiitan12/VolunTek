@@ -15,3 +15,5 @@ const String home = '/home';
 const String loggingState = '/logging-state';
 const String search = '/search';
 const String opportunityView = '/opportunity-view';
+const String interestForm = '/interest-form';
+const String profile = '/profile';

@@ -66,7 +66,7 @@ class _SearchState extends State<Search> {
                           shrinkWrap: true,
                           separatorBuilder: (context, index) =>
                               const SizedBox(height: 16),
-                          physics: const NeverScrollableScrollPhysics(),
+                          physics: const AlwaysScrollableScrollPhysics(),
                           itemCount: snapshot.data!.docs.length,
                           itemBuilder: (context, index) {
                             final data = snapshot.data!.docs
@@ -89,9 +89,10 @@ class _SearchState extends State<Search> {
                             return Container();
                           },
                         );
+
                 },
               ),
-            )
+            ),
           ],
         ),
       ),

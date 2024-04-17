@@ -22,6 +22,12 @@ class AppStyle {
     color: Colors.white,
   );
 
+  static TextStyle kRegular16Inter = GoogleFonts.inter(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    color: kDarkBlue,
+  );
+
   static TextStyle kRegular14 = GoogleFonts.dmSerifDisplay(
     fontSize: 14,
     fontWeight: FontWeight.w400,
@@ -33,6 +39,13 @@ class AppStyle {
     fontWeight: FontWeight.w400,
     color: kDarkBlue,
   );
+
+  static TextStyle kRegular12Inter = GoogleFonts.inter(
+    fontSize: 12,
+    fontWeight: FontWeight.w300,
+    color: kGray16,
+  );
+
 
   static TextStyle kRegular10 = GoogleFonts.inter(
     fontSize: 10,

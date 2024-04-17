@@ -17,6 +17,7 @@ class SelectableFilterTag extends StatefulWidget {
 
 class _SelectableFilterTagState extends State<SelectableFilterTag> {
   List<bool> _selected = []; // List to track selection state
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -28,7 +29,7 @@ class _SelectableFilterTagState extends State<SelectableFilterTag> {
   void _handleSelection(int index) {
     setState(() {
       for (int i = 0; i < _selected.length; i++) {
-        _selected[i] = (i == index); // Set only the clicked item as selected
+        _selected[i] = (i == index);
       }
       widget.onSelectionChanged(index); // Call callback with selected index
     });
@@ -39,8 +40,12 @@ class _SelectableFilterTagState extends State<SelectableFilterTag> {
     return StatefulBuilder(
       builder: (context, setState) => Row(
         children: widget.titles.asMap().entries.map((entry) {
-          final int index = entry.key;
+          final  index = entry.key;
           final String title = entry.value;
+          // select the first item by default
+          if (index == 0 && _selectedIndex == 0) {
+            _selected[0] = true;
+          }
           return Padding(
             padding: const EdgeInsets.only(right: 8.0),
             child: FilterTag(

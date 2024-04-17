@@ -18,6 +18,7 @@ import '../features/authentication/presentation/controller/sign_up_controller.da
 import '../features/authentication/presentation/widget/login.dart';
 import '../features/authentication/presentation/widget/onboarding.dart';
 import '../features/home/presentation/widget/interest_form.dart';
+import '../features/profile/presentation/widget/edit_profile.dart';
 import '../features/profile/presentation/widget/profile.dart';
 import '../features/search/presentation/widget/search.dart';
 import 'routes.dart';
@@ -68,6 +69,8 @@ class RouteGenerator {
         return navigateToRoute(const InterestForm());
       case profile:
         return navigateToRoute(const Profile());
+      case editProfile:
+        return navigateToRoute(const EditProfile());
     }
     return null;
   }

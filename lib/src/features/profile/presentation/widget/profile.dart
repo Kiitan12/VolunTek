@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:volun_tek/src/constants/app_style.dart';
 import 'package:badges/badges.dart' as badge;
+import 'package:volun_tek/src/routing/routes.dart';
 
 import '../../../../constants/colors.dart';
 import 'refactored/profile_tile.dart';
@@ -11,7 +12,9 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kBackgroundColor,
       appBar: AppBar(
+        backgroundColor: kBackgroundColor,
         title: Text(
           'Profile',
           style: AppStyle.kHeading1.copyWith(
@@ -26,24 +29,7 @@ class Profile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 16),
-              Center(
-                child: badge.Badge(
-                  badgeStyle: const badge.BadgeStyle(
-                    badgeColor: kYellow,
-                    elevation: 0,
-                  ),
-                  badgeContent: const Icon(Icons.edit, color: kBlueAccent),
-                  child: CircleAvatar(
-                    radius: 43,
-                    backgroundColor: kBlue,
-                    child: Image.asset(
-                      'assets/images/profile.png',
-                      height: 76,
-                      width: 76,
-                    ),
-                  ),
-                ),
-              ),
+
               const SizedBox(height: 12),
               const ProfileTile(
                 imgUrl: 'assets/svg/check_circle.svg',
@@ -86,16 +72,19 @@ class Profile extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 40),
-              const Row(
+               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  ProfileTile(
+                  const ProfileTile(
                     imgUrl: 'assets/svg/favourite.svg',
                     title: 'Favorite',
                   ),
                   ProfileTile(
                     imgUrl: 'assets/svg/edit_profile.svg',
                     title: 'Edit profile',
+                    onTap: () {
+                      Navigator.pushNamed(context, editProfile);
+                    }
                   ),
                 ],
               ),
@@ -128,7 +117,7 @@ class Profile extends StatelessWidget {
                     title: 'Contact us',
                     isCentered: false,
                   ),
-                  const SizedBox(height: 40),
+                   SizedBox(height: 40),
                   ProfileTile(
                     imgUrl: 'assets/svg/terms.svg',
                     title: 'Terms & Conditions',

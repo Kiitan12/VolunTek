@@ -61,7 +61,9 @@ class _SearchState extends State<Search> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   return (snapshot.connectionState == ConnectionState.waiting)
-                      ? const CircularProgressIndicator()
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
                       : ListView.separated(
                           shrinkWrap: true,
                           separatorBuilder: (context, index) =>
@@ -89,7 +91,6 @@ class _SearchState extends State<Search> {
                             return Container();
                           },
                         );
-
                 },
               ),
             ),

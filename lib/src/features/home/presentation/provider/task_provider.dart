@@ -20,4 +20,6 @@ final taskProvider = StateProvider<Task>((ref) => Task(
       time: Timestamp(20, 20),
       location: '',
       interest: '',
+      id: '',
+      favorites: [],
     ));

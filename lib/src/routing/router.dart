@@ -10,6 +10,7 @@ import 'package:volun_tek/src/features/authentication/presentation/widget/sign_u
 import 'package:volun_tek/src/features/home/presentation/widget/bottom_navigation.dart';
 import 'package:volun_tek/src/features/home/presentation/widget/home.dart';
 import 'package:volun_tek/src/features/home/presentation/widget/opportunity_view.dart';
+import 'package:volun_tek/src/features/profile/presentation/widget/favorite.dart';
 import 'package:volun_tek/src/utils/validation_helper.dart';
 
 import '../../logging_state.dart';
@@ -18,6 +19,7 @@ import '../features/authentication/presentation/controller/sign_up_controller.da
 import '../features/authentication/presentation/widget/login.dart';
 import '../features/authentication/presentation/widget/onboarding.dart';
 import '../features/home/presentation/widget/interest_form.dart';
+import '../features/profile/presentation/controller/user_controller.dart';
 import '../features/profile/presentation/widget/edit_profile.dart';
 import '../features/profile/presentation/widget/profile.dart';
 import '../features/search/presentation/widget/search.dart';
@@ -70,7 +72,12 @@ class RouteGenerator {
       case profile:
         return navigateToRoute(const Profile());
       case editProfile:
-        return navigateToRoute(const EditProfile());
+        return navigateToRoute( EditProfile(
+          validation: ValidationHelper(),
+          controller: UserController(),
+        ));
+      case favourite:
+        return navigateToRoute(const Favourite());
     }
     return null;
   }

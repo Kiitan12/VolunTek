@@ -1,7 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:volun_tek/src/constants/app_style.dart';
-import 'package:badges/badges.dart' as badge;
 import 'package:volun_tek/src/routing/routes.dart';
+import 'package:badges/badges.dart' as badge;
 
 import '../../../../constants/colors.dart';
 import 'refactored/profile_tile.dart';
@@ -29,7 +30,24 @@ class Profile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 16),
-
+              Center(
+                child: badge.Badge(
+                  badgeStyle: const badge.BadgeStyle(
+                    badgeColor: kYellow,
+                    elevation: 0,
+                  ),
+                  badgeContent: const Icon(Icons.edit, color: kBlueAccent),
+                  child: CircleAvatar(
+                    radius: 43,
+                    backgroundColor: kBlue,
+                    child: Image.asset(
+                      'assets/images/profile.png',
+                      height: 76,
+                      width: 76,
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(height: 12),
               const ProfileTile(
                 imgUrl: 'assets/svg/check_circle.svg',
@@ -72,20 +90,20 @@ class Profile extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 40),
-               Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  const ProfileTile(
+                  ProfileTile(
                     imgUrl: 'assets/svg/favourite.svg',
-                    title: 'Favorite',
+                    title: 'Favourite',
+                    onTap: () => Navigator.pushNamed(context, favourite),
                   ),
                   ProfileTile(
-                    imgUrl: 'assets/svg/edit_profile.svg',
-                    title: 'Edit profile',
-                    onTap: () {
-                      Navigator.pushNamed(context, editProfile);
-                    }
-                  ),
+                      imgUrl: 'assets/svg/edit_profile.svg',
+                      title: 'Edit profile',
+                      onTap: () {
+                        Navigator.pushNamed(context, editProfile);
+                      }),
                 ],
               ),
               const SizedBox(height: 40),
@@ -94,12 +112,39 @@ class Profile extends StatelessWidget {
                 style: AppStyle.kRegular16Inter.copyWith(fontSize: 14),
               ),
               const SizedBox(height: 40),
-              const Row(
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ProfileTile(
                     imgUrl: 'assets/svg/sign_out.svg',
                     title: 'Sign out',
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Sign out'),
+                              content: const Text(
+                                  'Are you sure you want to sign out?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    FirebaseAuth.instance.signOut();
+                                    Navigator.pushNamed(context, loggingState);
+                                  },
+                                  child: const Text('Sign out'),
+                                ),
+                              ],
+                            );
+                          });
+                    },
                   ),
                 ],
               ),
@@ -117,7 +162,7 @@ class Profile extends StatelessWidget {
                     title: 'Contact us',
                     isCentered: false,
                   ),
-                   SizedBox(height: 40),
+                  SizedBox(height: 40),
                   ProfileTile(
                     imgUrl: 'assets/svg/terms.svg',
                     title: 'Terms & Conditions',

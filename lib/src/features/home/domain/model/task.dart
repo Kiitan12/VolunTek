@@ -7,6 +7,8 @@ class Task {
   Timestamp time;
   String location;
   String interest;
+  String id;
+  List<dynamic> favorites = [];
 
   Task({
     required this.title,
@@ -15,6 +17,8 @@ class Task {
     required this.time,
     required this.location,
     required this.interest,
+    required this.id,
+    required this.favorites,
   });
 
   factory Task.fromJson(Map<String, dynamic> json) => Task(
@@ -24,6 +28,8 @@ class Task {
         time: json["time"] ?? Timestamp.now(),
         location: json["location"] ?? "",
         interest: json["interest"] ?? "",
+        id: json["id"] ?? "",
+        favorites: json["favorites"] ?? [],
       );
 
   Map<String, dynamic> toJson() => {
@@ -33,5 +39,7 @@ class Task {
         "time": time,
         "location": location,
         "interest": interest,
+        "id": id,
+        "favorites": favorites,
       };
 }

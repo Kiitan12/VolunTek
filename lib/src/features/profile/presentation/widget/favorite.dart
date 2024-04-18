@@ -32,6 +32,7 @@ class Favourite extends StatelessWidget {
 
               data: (data) {
                 if(data.isEmpty) {
+
                   return const Center(
                     child: Text('No Favourite Task'),
                   );

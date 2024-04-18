@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -116,22 +117,22 @@ class _OpportunityViewState extends State<OpportunityView> {
                             ref.refresh(getFavoritesProvider);
                           },
                           icon: StreamBuilder(
-                            stream: FirebaseFirestore.instance
-                                .collection('trendingTask')
-                                .doc(task.id)
-                                .snapshots(),
-                            builder: (context, snapshot) {
+                              stream: FirebaseFirestore.instance
+                                  .collection('trendingTask')
+                                  .doc(task.id)
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                final data = snapshot.data!.data()
+                                    as Map<String, dynamic>;
 
-                              final data = snapshot.data!.data() as Map<String, dynamic>;
-
-                              return Icon(
-                                data['favorites'].contains(FirebaseAuth.instance.currentUser!.uid)
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: kBlueAccent,
-                              );
-                            }
-                          ),
+                                return Icon(
+                                  data['favorites'].contains(FirebaseAuth
+                                          .instance.currentUser!.uid)
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: kBlueAccent,
+                                );
+                              }),
                         ),
                         const SizedBox(width: 8),
                         InkWell(
@@ -149,8 +150,8 @@ class _OpportunityViewState extends State<OpportunityView> {
                                 .collection('trendingTask')
                                 .doc(task.id)
                                 .update({
-                              'favorites':
-                                  FieldValue.arrayRemove([auth.currentUser!.uid])
+                              'favorites': FieldValue.arrayRemove(
+                                  [auth.currentUser!.uid])
                             });
                             FirebaseFirestore.instance
                                 .collection('users')
@@ -160,7 +161,6 @@ class _OpportunityViewState extends State<OpportunityView> {
                             });
 
                             ref.refresh(getFavoritesProvider);
-
                           },
                           child: Text('Save for later',
                               style: AppStyle.kRegular12Inter),
@@ -216,13 +216,80 @@ class _OpportunityViewState extends State<OpportunityView> {
                 style: AppStyle.kRegular10.copyWith(fontSize: 12),
               ),
               const SizedBox(height: 18),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  for (var i = 0; i < 5; i++)
-                    const Icon(Icons.star_border_outlined)
-                ],
-              ),
+              StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(FirebaseAuth.instance.currentUser!.uid)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    final data =
+                        snapshot.data!.data() as Map<String, dynamic>;
+                    print(data['ratings']);
+                    List<dynamic> ratings = data['ratings'];
+
+                    ratings = ratings.where((rating) => rating['taskId'] == task.id).toList();
+
+
+                    return RatingBar(
+                      initialRating: ratings[0]['rating'] == null
+                          ? 0
+                          : ratings[0]['rating'].toDouble(),
+                      itemSize: 24,
+                      direction: Axis.horizontal,
+                      allowHalfRating: false,
+                      itemCount: 5,
+                      ratingWidget: RatingWidget(
+                        full: const Icon(Icons.star, color: kBlueAccent),
+                        half: const Icon(Icons.favorite, color: kBlueAccent),
+                        empty: const Icon(Icons.star_border_outlined,
+                            color: kBlueAccent),
+                      ),
+                      itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      onRatingUpdate: (rating) {
+                        final auth = FirebaseAuth.instance;
+                        final userDocRef = FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(auth.currentUser!.uid);
+                        final rate = {
+                          'rating': rating,
+                          'taskId': task.id,
+                        };
+
+                        userDocRef.get().then((docSnapshot) {
+                          if (docSnapshot.exists) {
+                            final data = docSnapshot.data();
+                            final ratings = data?['ratings'] ?? [];
+
+                            // Check if the task ID exists in the ratings array
+                            final taskIndex = ratings.indexWhere(
+                                (rating) => rating['taskId'] == task.id);
+
+                            if (taskIndex != -1) {
+                              ratings[taskIndex]['rating'] = rating;
+                              userDocRef.update({'ratings': ratings}).then((_) {
+                                print('Rating updated successfully!');
+                              }).catchError((error) {
+                                print('Failed to update rating: $error');
+                              });
+                            } else {
+                              // Task ID doesn't exist in the array, add the new rating
+                              userDocRef.update({
+                                'ratings': FieldValue.arrayUnion([rate])
+                              }).then((_) {
+                                print('Rating added successfully!');
+                              }).catchError((error) {
+                                print('Failed to add rating: $error');
+                              });
+                            }
+                          } else {
+                            print('User document does not exist.');
+                          }
+                        }).catchError((error) {
+                          print('Error getting user document: $error');
+                        });
+                      },
+                    );
+                  }),
               const SizedBox(height: 32),
             ],
           ),

@@ -6,6 +6,7 @@ import 'package:badges/badges.dart' as badge;
 
 import '../../../../constants/colors.dart';
 import 'refactored/profile_tile.dart';
+import 'refactored/volunteer_type.dart';
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
@@ -54,34 +55,20 @@ class Profile extends StatelessWidget {
                 title: '100 hrs completed',
               ),
               const SizedBox(height: 12),
-              Center(
-                child: Container(
-                  width: 148,
-                  decoration: BoxDecoration(
-                    color: kYellow,
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  alignment: Alignment.center,
-                  child: Text('Golden Volunteer',
-                      style: AppStyle.kRegular16Inter.copyWith(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                      )),
-                ),
-              ),
+              const VolunteerType(),
               const SizedBox(height: 28),
               Text(
                 'ACCOUNT',
                 style: AppStyle.kRegular16Inter.copyWith(fontSize: 14),
               ),
               const SizedBox(height: 40),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   ProfileTile(
                     imgUrl: 'assets/svg/history.svg',
                     title: 'History',
+                    onTap: () => Navigator.pushNamed(context, history),
                   ),
                   ProfileTile(
                     imgUrl: 'assets/svg/badge.svg',
@@ -178,3 +165,4 @@ class Profile extends StatelessWidget {
     );
   }
 }
+

@@ -19,8 +19,10 @@ import '../features/authentication/presentation/controller/sign_up_controller.da
 import '../features/authentication/presentation/widget/login.dart';
 import '../features/authentication/presentation/widget/onboarding.dart';
 import '../features/home/presentation/widget/interest_form.dart';
+import '../features/home/presentation/widget/notification_view.dart';
 import '../features/profile/presentation/controller/user_controller.dart';
 import '../features/profile/presentation/widget/edit_profile.dart';
+import '../features/profile/presentation/widget/history.dart';
 import '../features/profile/presentation/widget/profile.dart';
 import '../features/search/presentation/widget/search.dart';
 import 'routes.dart';
@@ -78,6 +80,10 @@ class RouteGenerator {
         ));
       case favourite:
         return navigateToRoute(const Favourite());
+      case history:
+        return navigateToRoute(const History());
+      case notification:
+        return navigateToRoute(const NotificationView());
     }
     return null;
   }

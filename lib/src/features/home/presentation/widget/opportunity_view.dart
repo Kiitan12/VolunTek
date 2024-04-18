@@ -9,7 +9,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:volun_tek/globals.dart';
 import 'package:volun_tek/src/common_widgets/tek_elevated_button.dart';
 import 'package:volun_tek/src/constants/app_style.dart';
-import 'package:volun_tek/src/features/home/domain/model/task.dart';
 import 'package:volun_tek/src/features/profile/presentation/provider/user_provider.dart';
 
 import '../../../../constants/colors.dart';

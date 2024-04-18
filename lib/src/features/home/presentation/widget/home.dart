@@ -44,7 +44,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Row(
+                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         CircleAvatar(
@@ -52,10 +52,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                           backgroundImage:
                               AssetImage('assets/images/profile.png'),
                         ),
-                        CircleAvatar(
-                          radius: 24,
-                          backgroundColor: kYellow,
-                          child: Icon(Icons.notifications_outlined),
+                        InkWell(
+                          onTap: ()=> Navigator.pushNamed(context, notification),
+                          child: CircleAvatar(
+                            radius: 24,
+                            backgroundColor: kYellow,
+                            child: Icon(Icons.notifications_outlined),
+                          ),
                         ),
                       ],
                     ),

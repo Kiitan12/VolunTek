@@ -19,3 +19,5 @@ const String interestForm = '/interest-form';
 const String profile = '/profile';
 const String editProfile = '/edit-profile';
 const String favourite = '/favourite';
+const String history = '/history';
+const String notification = '/notification';

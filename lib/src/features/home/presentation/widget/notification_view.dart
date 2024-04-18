@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../../../../constants/app_style.dart';
 import '../../../../constants/colors.dart';
+import '../../../profile/presentation/widget/refactored/history_card.dart';
 
-class Notification extends StatelessWidget {
-  const Notification({super.key});
+class NotificationView extends StatelessWidget {
+  const NotificationView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kBackgroundColor,
       appBar: AppBar(
         backgroundColor: kBackgroundColor,
         title: Text(
@@ -18,13 +20,13 @@ class Notification extends StatelessWidget {
           ),
         ),
       ),
-      body: Column(
-        children: const [
-          Divider(
-            color: kGray85,
-            thickness: 1,
-          ),
-          Text('Notification'),
+      body: const Column(
+        children: [
+          Divider(color: kBlueAccent),
+          HistoryCard(),
+          Divider(color: kBlueAccent),
+          HistoryCard(),
+          Divider(color: kBlueAccent),
         ],
       ),
     );

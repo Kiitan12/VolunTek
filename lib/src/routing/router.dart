@@ -18,6 +18,7 @@ import '../features/authentication/presentation/controller/sign_in_controller.da
 import '../features/authentication/presentation/controller/sign_up_controller.dart';
 import '../features/authentication/presentation/widget/login.dart';
 import '../features/authentication/presentation/widget/onboarding.dart';
+import '../features/home/presentation/controller/interest_form_controller.dart';
 import '../features/home/presentation/widget/interest_form.dart';
 import '../features/home/presentation/widget/notification_view.dart';
 import '../features/profile/presentation/controller/user_controller.dart';
@@ -70,11 +71,16 @@ class RouteGenerator {
       case opportunityView:
         return navigateToRoute(const OpportunityView());
       case interestForm:
-        return navigateToRoute(const InterestForm());
+        return navigateToRoute(
+          InterestForm(
+            validation: ValidationHelper(),
+            controller: InterestFormController(),
+          ),
+        );
       case profile:
         return navigateToRoute(const Profile());
       case editProfile:
-        return navigateToRoute( EditProfile(
+        return navigateToRoute(EditProfile(
           validation: ValidationHelper(),
           controller: UserController(),
         ));

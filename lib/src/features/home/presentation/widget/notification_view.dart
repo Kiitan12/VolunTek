@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:volun_tek/src/features/home/presentation/widget/refactored/notification_card.dart';
 
 import '../../../../constants/app_style.dart';
 import '../../../../constants/colors.dart';
-import '../../../profile/presentation/widget/refactored/history_card.dart';
+import '../provider/notification_provider.dart';
 
 class NotificationView extends StatelessWidget {
   const NotificationView({super.key});
@@ -13,6 +15,7 @@ class NotificationView extends StatelessWidget {
       backgroundColor: kBackgroundColor,
       appBar: AppBar(
         backgroundColor: kBackgroundColor,
+        centerTitle: true,
         title: Text(
           'Notification',
           style: AppStyle.kHeading1.copyWith(
@@ -20,15 +23,40 @@ class NotificationView extends StatelessWidget {
           ),
         ),
       ),
-      body: const Column(
-        children: [
-          Divider(color: kBlueAccent),
-          HistoryCard(),
-          Divider(color: kBlueAccent),
-          HistoryCard(),
-          Divider(color: kBlueAccent),
-        ],
-      ),
+      body: Consumer(builder: (context, ref, child) {
+        final notify = ref.watch(getNotification);
+
+        return notify.when(
+          data: (notifications) {
+            if (notifications.isEmpty) {
+              return const Center(
+                child: Text('No notifications available.'),
+              );
+            }
+            return ListView.builder(
+              itemCount: notifications.length,
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              itemBuilder: (context, index) {
+                final notification = notifications[index];
+                return NotificationCard(
+                  title: notification.title,
+                  description: notification.body,
+                  date: notification.date,
+                );
+              },
+            );
+          },
+          loading: () => const Center(
+            child: CircularProgressIndicator(),
+          ),
+          error: (error, stackTrace) {
+            return Center(
+              child: Text('Error: $error'),
+            );
+          },
+        );
+      }),
     );
   }
 }

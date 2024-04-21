@@ -9,7 +9,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:volun_tek/globals.dart';
 import 'package:volun_tek/src/common_widgets/tek_elevated_button.dart';
 import 'package:volun_tek/src/constants/app_style.dart';
-import 'package:volun_tek/src/features/profile/presentation/provider/user_provider.dart';
 
 import '../../../../constants/colors.dart';
 import '../../../../routing/routes.dart';
@@ -85,7 +84,7 @@ class _OpportunityViewState extends State<OpportunityView> {
                       task.title,
                       style: AppStyle.kRegular20.copyWith(fontSize: 25),
                     ),
-                    Text(task.interest, style: AppStyle.kRegular12Inter),
+                    Text(task.cause, style: AppStyle.kRegular12Inter),
                     const SizedBox(height: 28),
                     TekElevatedButton(
                       title: 'Show Interest',
@@ -93,79 +92,79 @@ class _OpportunityViewState extends State<OpportunityView> {
                           Navigator.pushNamed(context, interestForm),
                     ),
                     const SizedBox(height: 24),
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            final auth = FirebaseAuth.instance;
-                            // save the task title to the user's favorite list
-                            FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(auth.currentUser!.uid)
-                                .update({
-                              'favorites': FieldValue.arrayUnion([task.id])
-                            });
-                            // create isFavorite field for each user in the task collection
-                            FirebaseFirestore.instance
-                                .collection('trendingTask')
-                                .doc(task.id)
-                                .update({
-                              'favorites':
-                                  FieldValue.arrayUnion([auth.currentUser!.uid])
-                            });
-                            ref.refresh(getFavoritesProvider);
-                          },
-                          icon: StreamBuilder(
-                              stream: FirebaseFirestore.instance
-                                  .collection('trendingTask')
-                                  .doc(task.id)
-                                  .snapshots(),
-                              builder: (context, snapshot) {
-                                final data = snapshot.data!.data()
-                                    as Map<String, dynamic>;
-
-                                return Icon(
-                                  data['favorites'].contains(FirebaseAuth
-                                          .instance.currentUser!.uid)
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
-                                  color: kBlueAccent,
-                                );
-                              }),
-                        ),
-                        const SizedBox(width: 8),
-                        InkWell(
-                          onTap: () {
-                            final auth = FirebaseAuth.instance;
-                            // // remove the task title from the user's favorite list
-                            // FirebaseFirestore.instance
-                            //     .collection('users')
-                            //     .doc(auth.currentUser!.uid)
-                            //     .update({
-                            //   'favorites': FieldValue.arrayRemove([task.title])
-                            // });
-                            // // remove isFavorite field for each user in the task collection
-                            FirebaseFirestore.instance
-                                .collection('trendingTask')
-                                .doc(task.id)
-                                .update({
-                              'favorites': FieldValue.arrayRemove(
-                                  [auth.currentUser!.uid])
-                            });
-                            FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(auth.currentUser!.uid)
-                                .update({
-                              'favorites': FieldValue.arrayRemove([task.id])
-                            });
-
-                            ref.refresh(getFavoritesProvider);
-                          },
-                          child: Text('Save for later',
-                              style: AppStyle.kRegular12Inter),
-                        )
-                      ],
-                    ),
+                    // Row(
+                    //   children: [
+                    //     IconButton(
+                    //       onPressed: () {
+                    //         final auth = FirebaseAuth.instance;
+                    //         // save the task title to the user's favorite list
+                    //         FirebaseFirestore.instance
+                    //             .collection('users')
+                    //             .doc(auth.currentUser!.uid)
+                    //             .update({
+                    //           'favorites': FieldValue.arrayUnion([task.id])
+                    //         });
+                    //         // create isFavorite field for each user in the task collection
+                    //         FirebaseFirestore.instance
+                    //             .collection('trendingTasks')
+                    //             .doc(task.id)
+                    //             .update({
+                    //           'favorites':
+                    //               FieldValue.arrayUnion([auth.currentUser!.uid])
+                    //         });
+                    //         ref.refresh(getFavoritesProvider);
+                    //       },
+                    //       icon: StreamBuilder(
+                    //           stream: FirebaseFirestore.instance
+                    //               .collection('trendingTasks')
+                    //               .doc(task.id)
+                    //               .snapshots(),
+                    //           builder: (context, snapshot) {
+                    //             final data = snapshot.data!.data()
+                    //                 as Map<String, dynamic>;
+                    //
+                    //             return Icon(
+                    //               data['favorites'].contains(FirebaseAuth
+                    //                       .instance.currentUser!.uid)
+                    //                   ? Icons.favorite
+                    //                   : Icons.favorite_border,
+                    //               color: kBlueAccent,
+                    //             );
+                    //           }),
+                    //     ),
+                    //     const SizedBox(width: 8),
+                    //     InkWell(
+                    //       onTap: () {
+                    //         final auth = FirebaseAuth.instance;
+                    //         // // remove the task title from the user's favorite list
+                    //         // FirebaseFirestore.instance
+                    //         //     .collection('users')
+                    //         //     .doc(auth.currentUser!.uid)
+                    //         //     .update({
+                    //         //   'favorites': FieldValue.arrayRemove([task.title])
+                    //         // });
+                    //         // // remove isFavorite field for each user in the task collection
+                    //         FirebaseFirestore.instance
+                    //             .collection('trendingTasks')
+                    //             .doc(task.id)
+                    //             .update({
+                    //           'favorites': FieldValue.arrayRemove(
+                    //               [auth.currentUser!.uid])
+                    //         });
+                    //         FirebaseFirestore.instance
+                    //             .collection('users')
+                    //             .doc(auth.currentUser!.uid)
+                    //             .update({
+                    //           'favorites': FieldValue.arrayRemove([task.id])
+                    //         });
+                    //
+                    //         ref.refresh(getFavoritesProvider);
+                    //       },
+                    //       child: Text('Save for later',
+                    //           style: AppStyle.kRegular12Inter),
+                    //     )
+                    //   ],
+                    // ),
                     const SizedBox(height: 20),
                     Text(
                       task.description,
@@ -199,7 +198,7 @@ class _OpportunityViewState extends State<OpportunityView> {
                             const Icon(Icons.access_time_filled,
                                 color: kBlueAccent),
                             const SizedBox(width: 4),
-                            Text('2Hrs', style: AppStyle.kRegular10),
+                            Text(task.time, style: AppStyle.kRegular10),
                           ],
                         ),
                       ],

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:volun_tek/src/features/home/application/services/task_services.dart';
 import 'package:volun_tek/src/features/home/domain/model/task.dart';
@@ -10,16 +9,32 @@ final taskServiceProvider = StateProvider<TaskServices>(
 final getTrendingTask = FutureProvider<List<Task>>((ref) {
   final task = ref.watch(taskServiceProvider);
 
-  return task.getTrendingTask();
+  return task.getTasks('trendingTasks');
 });
 
-final taskProvider = StateProvider<Task>((ref) => Task(
-      title: '',
-      description: '',
-      imgUrl: '',
-      time: Timestamp(20, 20),
-      location: '',
-      interest: '',
-      id: '',
-      favorites: [],
-    ));
+final getAllTask = FutureProvider<List<Task>>((ref) {
+  final task = ref.watch(taskServiceProvider);
+
+  return task.getTasks('tasks');
+});
+
+final loadingTaskProvider = StateNotifierProvider<TaskServices, bool>(
+      (ref) => TaskServices(),
+);
+
+
+
+final taskProvider = StateProvider<Task>(
+  (ref) => Task(
+    title: '',
+    description: '',
+    imgUrl: '',
+    time: '',
+    location: '',
+    cause: '',
+    id: '',
+    favorites: [],
+  ),
+);
+
+final causesProvider = StateProvider((ref) => []);

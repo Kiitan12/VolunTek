@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:volun_tek/src/features/home/presentation/widget/refactored/task_card.dart';
 
@@ -57,7 +56,7 @@ class _SearchState extends State<Search> {
             Expanded(
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection('trendingTask')
+                    .collection('trendingTasks')
                     .snapshots(),
                 builder: (context, snapshot) {
                   return (snapshot.connectionState == ConnectionState.waiting)
@@ -77,12 +76,14 @@ class _SearchState extends State<Search> {
                             if (name.isEmpty) {
                               return TaskCard(task: data[index]);
                             }
+
+
                             if (data[index]
                                     .title
                                     .toLowerCase()
                                     .contains(name.toLowerCase()) ||
                                 data[index]
-                                    .interest
+                                    .cause
                                     .toLowerCase()
                                     .contains(name.toLowerCase())) {
                               return TaskCard(task: data[index]);

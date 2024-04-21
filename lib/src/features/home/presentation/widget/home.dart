@@ -1,8 +1,12 @@
+import 'dart:math';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:volun_tek/src/constants/app_style.dart';
 import 'package:volun_tek/src/constants/colors.dart';
+import 'package:volun_tek/src/features/home/presentation/widget/refactored/selectable_filter_tag.dart';
+import 'package:volun_tek/src/features/home/presentation/widget/search_by_cause_view.dart';
 
 import '../../../../routing/routes.dart';
 import '../../application/services/task_services.dart';
@@ -17,16 +21,12 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
-  final filters = ['All', 'Time', 'Location', 'Skills'];
-
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   TaskServices taskServices = TaskServices();
-
-  late TabController tabController;
+  final filters = ['Time', 'Skills'];
 
   @override
   void initState() {
-    tabController = TabController(length: 3, vsync: this);
     super.initState();
   }
 
@@ -34,7 +34,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding:  EdgeInsets.only(top: MediaQuery.of(context).padding.top + 24),
+        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 24),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,17 +44,22 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                     Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        CircleAvatar(
+                        const CircleAvatar(
                           radius: 24,
-                          backgroundImage:
-                              AssetImage('assets/images/profile.png'),
+                          backgroundColor: kBlue,
+                          child: Icon(Icons.person),
                         ),
                         InkWell(
-                          onTap: ()=> Navigator.pushNamed(context, notification),
-                          child: CircleAvatar(
+                          onTap: () async {
+                            // await taskServices
+                            //     .uploadTask(uploadTaskList)
+                            //     .then((value) => print('Task Uploaded'));
+                            Navigator.pushNamed(context, notification);
+                          },
+                          child: const CircleAvatar(
                             radius: 24,
                             backgroundColor: kYellow,
                             child: Icon(Icons.notifications_outlined),
@@ -77,8 +82,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                               AppStyle.kRegular12.copyWith(color: kSilver),
                           filled: true,
                           fillColor: kGray85,
-                          suffixIcon:
-                              const Icon(Icons.search, color: kSilver),
+                          suffixIcon: const Icon(Icons.search, color: kSilver),
                           contentPadding:
                               const EdgeInsets.symmetric(horizontal: 20),
                           border: AppStyle.kNoBorder,
@@ -91,65 +95,126 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                       ),
                     ),
                     const SizedBox(height: 28),
-                    TabBar(
-                      controller: tabController,
-                      indicatorColor: Colors.transparent,
-                      indicator: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: kYellow,
-                      ),
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      labelColor: kDarkBlue,
-                      unselectedLabelColor: kGray16,
-                      tabs: const [
-                        Tab(text: 'All'),
-                        Tab(text: 'Time'),
-                        Tab(text: 'Skills'),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      height: 100,
-                      width: double.infinity,
-                      child: TabBarView(
-                        controller: tabController,
-                          children: const [
-                        Text('All'),
-                        Text('Time'),
-                        Text('Skills'),
-                      ]),
-                    ),
+                    Consumer(builder: (context, ref, child) {
+                      final allTask = ref.watch(getAllTask);
 
+                      return allTask.when(
+                        data: (data) {
+                          return Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SelectableFilterTag(
+                                    titles: filters,
+                                    onSelectionChanged: (index) {
+                                      if(index == 0) {
+                                        // arrange by time in ascending order
+                                       final sortedData = data
+                                            .where((task) => task.time.isNotEmpty)
+                                            .toList()
+                                              ..sort((a, b) => a.time
+                                                  .compareTo(b.time));
+                                       Navigator.push(
+                                           context,
+                                           MaterialPageRoute(
+                                               builder: (context) =>
+                                                   SearchByCauseView(
+                                                       causes: sortedData,
+                                                     title: 'Filter by Time',
+                                                   )));
 
-                    const SizedBox(height: 20),
-                    Container(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Search by Cause',
-                          style: AppStyle.kRegular20,
-                        ),
-                        const Icon(Icons.arrow_forward)
-                      ],
-                    ),
-                    GridView.builder(
-                      itemCount: 6,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 16,
-                        mainAxisSpacing: 16,
-                        childAspectRatio: 2.0,
-                      ),
-                      itemBuilder: (context, index) {
-                        return const Interest(
-                          title: 'Education',
-                        );
-                      },
-                    ),
+                                      } else {
+                                        /// arrange by skills in ascending order
+                                        // final sortedData = data
+                                        //     .where((task) => task.skills.isNotEmpty)
+                                        //     .toList()
+                                        //       ..sort((a, b) => a.skills
+                                        //           .compareTo(b.skills));
+                                        // Navigator.push(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //         builder: (context) =>
+                                        //             SearchByCauseView(
+                                        //                 causes: sortedData,
+                                        //               title: 'Filter by Skills',
+                                        //             )));
+
+                                      }
+
+                                    },
+                                  ),
+                                  const Icon(Icons.filter_list_rounded)
+                                ],
+                              ),
+                              const SizedBox(height: 24),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Search by Cause',
+                                    style: AppStyle.kRegular20,
+                                  ),
+                                  const Icon(Icons.arrow_forward)
+                                ],
+                              ),
+                              GridView.builder(
+                                itemCount: data
+                                    .where((task) => task.cause.isNotEmpty)
+                                    .map((task) => task.cause)
+                                    .toSet()
+                                    .toList()
+                                    .length,
+                                shrinkWrap: true,
+                                padding: const EdgeInsets.only(top: 16),
+                                physics: const NeverScrollableScrollPhysics(),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  crossAxisSpacing: 16,
+                                  childAspectRatio: 2.3,
+                                  mainAxisSpacing: 12,
+                                ),
+                                itemBuilder: (context, index) {
+                                  final causes = data
+                                      .where((task) => task.cause.isNotEmpty)
+                                      .map((task) => task.cause)
+                                      .toSet()
+                                      .toList();
+
+                                  // add the colors randomly to the causes
+                                  const colors = causeColors;
+                                  final color =
+                                      colors[Random().nextInt(colors.length)];
+
+                                  return Interest(
+                                    title: causes[index],
+                                    color: color,
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SearchByCauseView(
+                                                      causes: data
+                                                          .where((task) =>
+                                                              task.cause ==
+                                                              causes[index]
+                                                                  .toString())
+                                                          .toList())));
+                                    },
+                                  );
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                        error: (error, stackTrace) {
+                          return Text('Error: $error');
+                        },
+                        loading: () => const CircularProgressIndicator(),
+                      );
+                    }),
                     const SizedBox(height: 24),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -174,7 +239,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                       itemCount: data.length,
                       options: CarouselOptions(
                         height: 234,
-                        viewportFraction: 0.75,
+                        viewportFraction: 0.76,
                         enableInfiniteScroll: false,
                         enlargeCenterPage: false,
                         autoPlay: true,
@@ -184,6 +249,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                           padding: const EdgeInsets.only(right: 18.0),
                           child: TaskCard(
                             task: data[index],
+                            isTrending: true,
+                            onTap: () {
+                              ref.read(taskProvider.notifier).state = data[index];
+                              Navigator.pushNamed(context, opportunityView);
+                            },
                           ),
                         );
                       },
@@ -211,15 +281,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                         const Icon(Icons.arrow_forward)
                       ],
                     ),
-                    const SizedBox(height: 28),
                     Consumer(builder: (context, ref, child) {
-                      final task = ref.watch(getTrendingTask);
+                      final task = ref.watch(getAllTask);
 
                       return task.when(
                         data: (data) {
                           return ListView.separated(
                             itemCount: data.length,
                             shrinkWrap: true,
+                            padding: const EdgeInsets.only(top: 20),
                             physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
                               return TaskCard(
@@ -227,8 +297,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                                 onTap: () {
                                   ref.read(taskProvider.notifier).state =
                                       data[index];
-                                  Navigator.pushNamed(
-                                      context, opportunityView);
+                                  Navigator.pushNamed(context, opportunityView);
                                 },
                               );
                             },

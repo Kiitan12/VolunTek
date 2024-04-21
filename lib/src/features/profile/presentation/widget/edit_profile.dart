@@ -50,21 +50,20 @@ class _EditProfileState extends State<EditProfile> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 24),
-                          Center(
+                          const Center(
                             child: badge.Badge(
-                              badgeStyle: const badge.BadgeStyle(
+                              badgeStyle: badge.BadgeStyle(
                                 badgeColor: kYellow,
                                 elevation: 0,
                               ),
                               badgeContent:
-                                  const Icon(Icons.edit, color: kBlueAccent),
+                                  Icon(Icons.edit, color: kBlueAccent),
                               child: CircleAvatar(
                                 radius: 43,
                                 backgroundColor: kBlue,
-                                child: Image.asset(
-                                  'assets/images/profile.png',
-                                  height: 76,
-                                  width: 76,
+                                child: Icon(
+                                  Icons.person,
+                                  size: 60,
                                 ),
                               ),
                             ),

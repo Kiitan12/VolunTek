@@ -31,20 +31,19 @@ class Profile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 16),
-              Center(
+              const Center(
                 child: badge.Badge(
-                  badgeStyle: const badge.BadgeStyle(
+                  badgeStyle: badge.BadgeStyle(
                     badgeColor: kYellow,
                     elevation: 0,
                   ),
-                  badgeContent: const Icon(Icons.edit, color: kBlueAccent),
+                  badgeContent: Icon(Icons.edit, color: kBlueAccent),
                   child: CircleAvatar(
                     radius: 43,
                     backgroundColor: kBlue,
-                    child: Image.asset(
-                      'assets/images/profile.png',
-                      height: 76,
-                      width: 76,
+                    child: Icon(
+                      Icons.person,
+                      size: 60,
                     ),
                   ),
                 ),
@@ -70,7 +69,7 @@ class Profile extends StatelessWidget {
                     title: 'History',
                     onTap: () => Navigator.pushNamed(context, history),
                   ),
-                  ProfileTile(
+                  const ProfileTile(
                     imgUrl: 'assets/svg/badge.svg',
                     title: 'Badges',
                   ),

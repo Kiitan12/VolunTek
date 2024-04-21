@@ -12,3 +12,19 @@ const kGray85 = Color(0xFFD9D9D9);
 const kGray65 = Color(0xFF6C757D);
 const kSeaShell = Color(0xFFFFF2E3);
 const kSilver = Color(0xFFBBBBBB);
+
+const kCauseColor1 = Color(0xFF4698F0);
+const kCauseColor2 = Color(0xFFF0754F);
+const kCauseColor3 = Color(0xFF409D55);
+const kCauseColor4 = Color(0xFFDD59D7);
+const kCauseColor5 = Color(0xFF292929);
+const kCauseColor6 = Color(0xFF5673DD);
+
+const causeColors = [
+  kCauseColor1,
+  kCauseColor2,
+  kCauseColor3,
+  kCauseColor4,
+  kCauseColor5,
+  kCauseColor6
+];

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:volun_tek/src/constants/app_style.dart';
 import 'package:volun_tek/src/constants/colors.dart';
 import 'package:volun_tek/src/features/profile/presentation/widget/profile.dart';
 
@@ -24,7 +25,9 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation> {
       body: [
         const Home(),
         const Search(),
-        Container(color: kGray85),
+        Center(
+          child: Text('Coming soon', style: AppStyle.kHeading1),
+        ),
         const Profile()
       ][index],
       bottomNavigationBar: NavigationBarTheme(

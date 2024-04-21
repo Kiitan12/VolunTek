@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-
 import 'firebase_options.dart';
 import 'globals.dart';
 import 'src/routing/router.dart';
@@ -13,9 +12,13 @@ import 'src/routing/routes.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('Handling a background message ${message.messageId}');
+  // Get the notification title and body from the message
+  String title = message.notification?.title ?? 'Notification';
+  String body = message.notification?.body ?? 'Notification body';
+
+  // create a collection in firestore to store the notification
+  // add the notification to the collection
 }
-
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Firebase.initializeApp();
@@ -26,18 +29,21 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
+  //
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  if(Platform.isIOS){
+
+
+
+  if (Platform.isIOS) {
     final apnsToken = await messaging.getAPNSToken();
     if (apnsToken != null) {
       // APNS token is available, make FCM plugin API requests...
       print("Firebase messaging token: ${await messaging.getToken()}");
     }
-  }else{
+  } else {
     print("Firebase messaging token: ${await messaging.getToken()}");
   }
-
 
   // print("FCM Token: $fcmToken");
   NotificationSettings settings = await messaging.requestPermission(

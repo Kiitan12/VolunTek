@@ -21,7 +21,8 @@ class SignInService extends StateNotifier<bool> {
             email: email,
             password: password,
           )
-          .then((value) => navigatorKey.currentState!.pushNamed(bottomNavigation));
+          .then((value) => navigatorKey.currentState!
+              .pushNamedAndRemoveUntil(bottomNavigation, (route) => false));
       state = false;
     } on FirebaseAuthException catch (e) {
       state = false;

@@ -9,11 +9,13 @@ class TaskCard extends StatelessWidget {
   const TaskCard({
     super.key,
     required this.task,
+    this.isTrending = false,
     this.onTap,
   });
 
   final Task task;
   final VoidCallback? onTap;
+  final bool isTrending;
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +50,18 @@ class TaskCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      task.interest,
+                      task.cause,
                       style: AppStyle.kRegular14.copyWith(color: kGray65),
                     ),
-                    Text(task.title, style: AppStyle.kRegular20),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width *
+                          (isTrending ? 0.4 : 0.5),
+                      child: Text(
+                        task.title,
+                        style: AppStyle.kRegular20,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ],
                 )
               ],
@@ -74,7 +84,9 @@ class TaskCard extends StatelessWidget {
                   children: [
                     const Icon(Icons.location_on, color: kBlueAccent),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.23,
+                      width: isTrending? MediaQuery.of(context).size.width * 0.20
+                          : MediaQuery.of(context).size.width * 0.23
+                      ,
                       child: Text(
                         task.location,
                         overflow: TextOverflow.ellipsis,
@@ -84,7 +96,7 @@ class TaskCard extends StatelessWidget {
                     const SizedBox(width: 8),
                     const Icon(Icons.access_time_filled, color: kBlueAccent),
                     const SizedBox(width: 4),
-                    Text('2Hrs', style: AppStyle.kRegular10),
+                    Text(task.time, style: AppStyle.kRegular10),
                   ],
                 ),
                 const Row(

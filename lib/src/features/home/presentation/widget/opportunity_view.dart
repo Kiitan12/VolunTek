@@ -12,6 +12,7 @@ import 'package:volun_tek/src/constants/app_style.dart';
 
 import '../../../../constants/colors.dart';
 import '../../../../routing/routes.dart';
+import '../../../profile/presentation/provider/user_provider.dart';
 import '../provider/task_provider.dart';
 
 class OpportunityView extends StatefulWidget {
@@ -92,79 +93,90 @@ class _OpportunityViewState extends State<OpportunityView> {
                           Navigator.pushNamed(context, interestForm),
                     ),
                     const SizedBox(height: 24),
-                    // Row(
-                    //   children: [
-                    //     IconButton(
-                    //       onPressed: () {
-                    //         final auth = FirebaseAuth.instance;
-                    //         // save the task title to the user's favorite list
-                    //         FirebaseFirestore.instance
-                    //             .collection('users')
-                    //             .doc(auth.currentUser!.uid)
-                    //             .update({
-                    //           'favorites': FieldValue.arrayUnion([task.id])
-                    //         });
-                    //         // create isFavorite field for each user in the task collection
-                    //         FirebaseFirestore.instance
-                    //             .collection('trendingTasks')
-                    //             .doc(task.id)
-                    //             .update({
-                    //           'favorites':
-                    //               FieldValue.arrayUnion([auth.currentUser!.uid])
-                    //         });
-                    //         ref.refresh(getFavoritesProvider);
-                    //       },
-                    //       icon: StreamBuilder(
-                    //           stream: FirebaseFirestore.instance
-                    //               .collection('trendingTasks')
-                    //               .doc(task.id)
-                    //               .snapshots(),
-                    //           builder: (context, snapshot) {
-                    //             final data = snapshot.data!.data()
-                    //                 as Map<String, dynamic>;
-                    //
-                    //             return Icon(
-                    //               data['favorites'].contains(FirebaseAuth
-                    //                       .instance.currentUser!.uid)
-                    //                   ? Icons.favorite
-                    //                   : Icons.favorite_border,
-                    //               color: kBlueAccent,
-                    //             );
-                    //           }),
-                    //     ),
-                    //     const SizedBox(width: 8),
-                    //     InkWell(
-                    //       onTap: () {
-                    //         final auth = FirebaseAuth.instance;
-                    //         // // remove the task title from the user's favorite list
-                    //         // FirebaseFirestore.instance
-                    //         //     .collection('users')
-                    //         //     .doc(auth.currentUser!.uid)
-                    //         //     .update({
-                    //         //   'favorites': FieldValue.arrayRemove([task.title])
-                    //         // });
-                    //         // // remove isFavorite field for each user in the task collection
-                    //         FirebaseFirestore.instance
-                    //             .collection('trendingTasks')
-                    //             .doc(task.id)
-                    //             .update({
-                    //           'favorites': FieldValue.arrayRemove(
-                    //               [auth.currentUser!.uid])
-                    //         });
-                    //         FirebaseFirestore.instance
-                    //             .collection('users')
-                    //             .doc(auth.currentUser!.uid)
-                    //             .update({
-                    //           'favorites': FieldValue.arrayRemove([task.id])
-                    //         });
-                    //
-                    //         ref.refresh(getFavoritesProvider);
-                    //       },
-                    //       child: Text('Save for later',
-                    //           style: AppStyle.kRegular12Inter),
-                    //     )
-                    //   ],
-                    // ),
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            final auth = FirebaseAuth.instance;
+                            // save the task title to the user's favorite list
+                            // if favorites field doesn't exist, create it or update it if it does
+                            FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(auth.currentUser!.uid)
+                                .update({
+                              'favorites': FieldValue.arrayUnion([task.id])
+                            });
+
+                            // create isFavorite field for each user in the task collection
+                            FirebaseFirestore.instance
+                                .collection('tasks')
+                                .doc(task.id)
+                                .update({
+                              'favorites':
+                                  FieldValue.arrayUnion([auth.currentUser!.uid])
+                            });
+                            ref.refresh(getFavoritesProvider);
+                          },
+                          icon: StreamBuilder(
+                              stream: FirebaseFirestore.instance
+                                  .collection('tasks')
+                                  .doc(task.id)
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const CircularProgressIndicator();
+                                }
+
+                                // Check if the snapshot has data
+                                if (!snapshot.hasData) {
+                                  final data = snapshot.data!.data()
+                                      as Map<String, dynamic>;
+
+                                  return Icon(
+                                    data['favorites'].contains(FirebaseAuth
+                                            .instance.currentUser!.uid)
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color: kBlueAccent,
+                                  );
+                                }
+                                return const Icon(Icons.favorite_border);
+                              }),
+                        ),
+                        const SizedBox(width: 8),
+                        InkWell(
+                          onTap: () {
+                            final auth = FirebaseAuth.instance;
+                            // // remove the task title from the user's favorite list
+                            // FirebaseFirestore.instance
+                            //     .collection('users')
+                            //     .doc(auth.currentUser!.uid)
+                            //     .update({
+                            //   'favorites': FieldValue.arrayRemove([task.title])
+                            // });
+                            // // remove isFavorite field for each user in the task collection
+                            FirebaseFirestore.instance
+                                .collection('tasks')
+                                .doc(task.id)
+                                .update({
+                              'favorites': FieldValue.arrayRemove(
+                                  [auth.currentUser!.uid])
+                            });
+                            FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(auth.currentUser!.uid)
+                                .update({
+                              'favorites': FieldValue.arrayRemove([task.id])
+                            });
+
+                            ref.refresh(getFavoritesProvider);
+                          },
+                          child: Text('Save for later',
+                              style: AppStyle.kRegular12Inter),
+                        )
+                      ],
+                    ),
                     const SizedBox(height: 20),
                     Text(
                       task.description,
@@ -220,18 +232,24 @@ class _OpportunityViewState extends State<OpportunityView> {
                       .doc(FirebaseAuth.instance.currentUser!.uid)
                       .snapshots(),
                   builder: (context, snapshot) {
-                    final data =
-                        snapshot.data!.data() as Map<String, dynamic>;
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    }
+
+                    final data = snapshot.data!.data() as Map<String, dynamic>;
                     print(data['ratings']);
-                    List<dynamic> ratings = data['ratings'];
 
-                    ratings = ratings.where((rating) => rating['taskId'] == task.id).toList();
+                    List<dynamic> ratings = data['ratings'] ?? [];
 
+                    ratings = ratings
+                        .where((rating) =>
+                            rating['taskId'] == task.id &&
+                            rating['taskId'] == null)
+                        .toList();
 
                     return RatingBar(
-                      initialRating: ratings[0]['rating'] == null
-                          ? 0
-                          : ratings[0]['rating'].toDouble(),
+                      initialRating:
+                          ratings.isEmpty ? 0 : ratings[0]['rating'].toDouble(),
                       itemSize: 24,
                       direction: Axis.horizontal,
                       allowHalfRating: false,

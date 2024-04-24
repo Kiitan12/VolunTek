@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:volun_tek/globals.dart';
 import 'package:volun_tek/src/constants/colors.dart';
+import 'package:volun_tek/src/routing/routes.dart';
 
 class SignUpService extends StateNotifier<bool> {
   final FirebaseAuth auth;
@@ -36,7 +37,8 @@ class SignUpService extends StateNotifier<bool> {
           content: Text('Account created successfully'),
           backgroundColor: kBlue,
         ));
-        navigatorKey.currentState!.pop();
+
+        navigatorKey.currentState!.pushNamed(interest);
       });
       state = false;
     } on FirebaseAuthException catch (e) {
@@ -48,6 +50,30 @@ class SignUpService extends StateNotifier<bool> {
         ),
       );
       throw e.message ?? 'An error occurred';
+    }
+  }
+
+  // send interest to the DB
+  // it's list of Strings
+  Future<void> submitInterest(
+    List interests,
+  ) async {
+    try {
+      state = true;
+
+      await FirebaseFirestore.instance.collection('usersInterest').add({
+        auth.currentUser!.uid: {'interests': interests},
+      });
+      navigatorKey.currentState!.pop();
+      navigatorKey.currentState!.pop();
+
+      snackBarKey.currentState!.showSnackBar(const SnackBar(
+        content: Text('Interest submitted successfully'),
+      ));
+      state = false;
+    } catch (e) {
+      state = false;
+      rethrow;
     }
   }
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:volun_tek/src/constants/colors.dart';
-import 'package:volun_tek/src/routing/routes.dart';
 
 import '../../../../common_widgets/tek_elevated_button.dart';
+import '../provider/sign_up_provider.dart';
 import 'refactored/interest_card.dart';
 
 class InterestPage extends StatefulWidget {
@@ -35,7 +36,6 @@ class _InterestPageState extends State<InterestPage> {
     'International Development',
     'Healthcare',
   ];
-
   final interests = [];
 
   @override
@@ -81,29 +81,34 @@ class _InterestPageState extends State<InterestPage> {
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return InterestCard(
-                    title: titles.elementAt(index),
-                    image: images.elementAt(index),
-                    isSelected: interests.contains(titles.elementAt(index)),
-                    onPressed: () {
-                      setState(() {
-                        if (interests.contains(titles.elementAt(index))) {
-                          interests.remove(titles.elementAt(index));
-                        } else {
-                          interests.add(titles.elementAt(index));
-                        }
-                      });
-                    },
-                  );
+                      title: titles.elementAt(index),
+                      image: images.elementAt(index),
+                      isSelected: interests.contains(titles.elementAt(index)),
+                      onPressed: () => setState(() {
+                            if (interests.contains(titles.elementAt(index))) {
+                              interests.remove(titles.elementAt(index));
+                            } else {
+                              interests.add(titles.elementAt(index));
+                            }
+                          }));
                 },
               ),
               const SizedBox(height: 32),
-              TekElevatedButton(
-                title: 'Submit',
-                onPressed: interests.isEmpty
-                    ? () {}
-                    : () => Navigator.pushNamed(context, login),
-                buttonColor: interests.isEmpty ? kBlueAccent : kBlue,
-              ),
+              Consumer(builder: (context, ref, child) {
+                return TekElevatedButton(
+                  onPressed: interests.isEmpty
+                      ? () {}
+                      : () => ref
+                          .read(signUpProvider.notifier)
+                          .submitInterest(interests),
+                  buttonColor: interests.isEmpty ? kBlueAccent : kBlue,
+                  child: ref.watch(signUpProvider)
+                      ? const CircularProgressIndicator(
+                          color: Colors.white,
+                        )
+                      : const Text('Submit'),
+                );
+              }),
               const SizedBox(height: 56),
             ],
           ),

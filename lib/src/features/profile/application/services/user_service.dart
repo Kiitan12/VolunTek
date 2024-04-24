@@ -77,4 +77,41 @@ class UserService extends StateNotifier<bool> {
       rethrow;
     }
   }
+
+  Future<void> addFavorite(String taskId) async {
+    final user = auth.currentUser;
+    final userData = await firestore.collection('users').doc(user!.uid).get();
+    final List<dynamic> favorites = userData.data()!['favorites'];
+    favorites.add(taskId);
+    await firestore.collection('users').doc(user.uid).update({'favorites': favorites});
+  }
+
+  Future<void> removeFavorite(String taskId) async {
+    final user = auth.currentUser;
+    final userData = await firestore.collection('users').doc(user!.uid).get();
+    final List<dynamic> favorites = userData.data()!['favorites'];
+    favorites.remove(taskId);
+    await firestore.collection('users').doc(user.uid).update({'favorites': favorites});
+  }
+
+  Future<List<Task>> getInterestHistory() async {
+    try {
+      state = true;
+      final user = auth.currentUser;
+      final userData = await firestore.collection('users').doc(user!.uid).get();
+      final List<dynamic> history = userData.data()!['history'];
+      final List<Task> tasks = [];
+
+      for (final id in history) {
+        final task = await firestore.collection('trendingTask').doc(id).get();
+        tasks.add(Task.fromJson(task.data()!));
+      }
+      state = false;
+      return tasks;
+
+    } catch (e) {
+      state = false;
+      rethrow;
+    }
+  }
 }

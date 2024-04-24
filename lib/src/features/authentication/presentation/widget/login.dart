@@ -40,9 +40,12 @@ class _LoginState extends State<Login> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: Text('Login', style: AppStyle.kHeading1),
+                  InkWell(
+                    onTap: () => Navigator.pushNamed(context, interest),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: Text('Login', style: AppStyle.kHeading1),
+                    ),
                   ),
                   Center(
                     child: Image.asset(

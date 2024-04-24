@@ -89,8 +89,8 @@ class _InterestFormState extends ConsumerState<InterestForm> {
                 TekElevatedButton(
                   child: ref.watch(loadingTaskProvider)
                       ? const CircularProgressIndicator(
-                    color: Colors.white,
-                  )
+                          color: Colors.white,
+                        )
                       : const Text('Submit'),
                   onPressed: () async {
                     if (widget.controller.formKey.currentState!.validate()) {

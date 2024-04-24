@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -8,6 +9,7 @@ import '../../domain/model/task.dart';
 
 class TaskServices extends StateNotifier<bool> {
   final firestore = FirebaseFirestore.instance;
+  final auth = FirebaseAuth.instance;
 
   TaskServices() : super(false);
 
@@ -48,6 +50,8 @@ class TaskServices extends StateNotifier<bool> {
         'response': response1,
         'experience': response2,
         'name': name,
+        'uid': auth.currentUser!.uid,
+        'timestamp': FieldValue.serverTimestamp(),
       });
       navigatorKey.currentState!.pop();
       snackBarKey.currentState!.showSnackBar(const SnackBar(

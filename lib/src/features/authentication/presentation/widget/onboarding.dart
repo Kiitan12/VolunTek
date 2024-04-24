@@ -32,10 +32,9 @@ class _OnboardingState extends State<Onboarding> {
   navigateToOnBoarding() async {
     await Future.delayed(const Duration(milliseconds: 2000), () {});
     initScreen == 0 || initScreen == null
-        ? navigatorKey.currentState!.pushNamed(signup) :
-        navigatorKey.currentState!.pushNamedAndRemoveUntil(loggingState, (route) => false);
-
-
+        ? navigatorKey.currentState!.pushNamed(signup)
+        : navigatorKey.currentState!
+            .pushNamedAndRemoveUntil(loggingState, (route) => false);
   }
 
   @override
@@ -60,7 +59,8 @@ class _OnboardingState extends State<Onboarding> {
             ),
             const SizedBox(height: 60),
             InkWell(
-              onTap: () => Navigator.pushNamed(context, interest),
+              onTap: () => Navigator.pushNamedAndRemoveUntil(
+                  context, loggingState, (route) => false),
               child: const CircleAvatar(
                 backgroundColor: kYellow,
                 child: Icon(Icons.arrow_forward_ios_rounded, size: 20),

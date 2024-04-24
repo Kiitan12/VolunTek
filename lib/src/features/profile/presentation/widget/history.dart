@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badge;
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:volun_tek/src/features/profile/presentation/widget/refactored/history_card.dart';
 
 import '../../../../constants/app_style.dart';
@@ -54,7 +55,11 @@ class History extends StatelessWidget {
           const VolunteerType(),
           const SizedBox(height: 32),
           const Divider(color: kBlueAccent),
-          const HistoryCard(),
+          Consumer(
+            builder: (context, ref, child) {
+              return const HistoryCard();
+            }
+          ),
           const Divider(color: kBlueAccent),
         ],
       ),

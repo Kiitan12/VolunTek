@@ -33,6 +33,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kBackgroundColor,
       body: Padding(
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 24),
         child: SingleChildScrollView(

@@ -104,27 +104,28 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           return Column(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   SelectableFilterTag(
                                     titles: filters,
                                     onSelectionChanged: (index) {
-                                      if(index == 0) {
+                                      if (index == 0) {
                                         // arrange by time in ascending order
-                                       final sortedData = data
-                                            .where((task) => task.time.isNotEmpty)
+                                        final sortedData = data
+                                            .where(
+                                                (task) => task.time.isNotEmpty)
                                             .toList()
-                                              ..sort((a, b) => a.time
-                                                  .compareTo(b.time));
-                                       Navigator.push(
-                                           context,
-                                           MaterialPageRoute(
-                                               builder: (context) =>
-                                                   SearchByCauseView(
-                                                       causes: sortedData,
-                                                     title: 'Filter by Time',
-                                                   )));
-
+                                          ..sort((a, b) =>
+                                              a.time.compareTo(b.time));
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SearchByCauseView(
+                                                      causes: sortedData,
+                                                      title: 'Filter by Time',
+                                                    )));
                                       } else {
                                         /// arrange by skills in ascending order
                                         // final sortedData = data
@@ -140,9 +141,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                         //                 causes: sortedData,
                                         //               title: 'Filter by Skills',
                                         //             )));
-
                                       }
-
                                     },
                                   ),
                                   const Icon(Icons.filter_list_rounded)
@@ -150,7 +149,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                               ),
                               const SizedBox(height: 24),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Search by Cause',
@@ -236,6 +236,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
                 return task.when(
                   data: (data) {
+                    if (data.isEmpty) {
+                      return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20.0),
+                          child: Text('No task available'),
+                        ),
+                      );
+                    }
+
                     return CarouselSlider.builder(
                       itemCount: data.length,
                       options: CarouselOptions(
@@ -252,7 +261,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             task: data[index],
                             isTrending: true,
                             onTap: () {
-                              ref.read(taskProvider.notifier).state = data[index];
+                              ref.read(taskProvider.notifier).state =
+                                  data[index];
                               Navigator.pushNamed(context, opportunityView);
                             },
                           ),
@@ -287,6 +297,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
                       return task.when(
                         data: (data) {
+                          if (data.isEmpty) {
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 20.0),
+                                child: Text('No task available'),
+                              ),
+                            );
+                          }
                           return ListView.separated(
                             itemCount: data.length,
                             shrinkWrap: true,

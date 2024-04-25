@@ -12,7 +12,7 @@ import 'package:volun_tek/src/constants/app_style.dart';
 
 import '../../../../constants/colors.dart';
 import '../../../../routing/routes.dart';
-import '../../../profile/presentation/provider/user_provider.dart';
+import '../../application/services/opportunity_services.dart';
 import '../provider/task_provider.dart';
 
 class OpportunityView extends StatefulWidget {
@@ -25,6 +25,11 @@ class OpportunityView extends StatefulWidget {
 }
 
 class _OpportunityViewState extends State<OpportunityView> {
+  final opportunity = OpportunityServices(
+    auth: FirebaseAuth.instance,
+    firestore: FirebaseFirestore.instance,
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,27 +101,8 @@ class _OpportunityViewState extends State<OpportunityView> {
                     Row(
                       children: [
                         IconButton(
-                          onPressed: () {
-                            final auth = FirebaseAuth.instance;
-                            // save the task title to the user's favorite list
-                            // if favorites field doesn't exist, create it or update it if it does
-                            FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(auth.currentUser!.uid)
-                                .update({
-                              'favorites': FieldValue.arrayUnion([task.id])
-                            });
-
-                            // create isFavorite field for each user in the task collection
-                            FirebaseFirestore.instance
-                                .collection('tasks')
-                                .doc(task.id)
-                                .update({
-                              'favorites':
-                                  FieldValue.arrayUnion([auth.currentUser!.uid])
-                            });
-                            ref.refresh(getFavoritesProvider);
-                          },
+                          onPressed: () =>
+                              opportunity.updateLikeButton(task, ref),
                           icon: StreamBuilder(
                               stream: FirebaseFirestore.instance
                                   .collection('tasks')
@@ -129,7 +115,7 @@ class _OpportunityViewState extends State<OpportunityView> {
                                 }
 
                                 // Check if the snapshot has data
-                                if (!snapshot.hasData) {
+                                if (snapshot.hasData) {
                                   final data = snapshot.data!.data()
                                       as Map<String, dynamic>;
 
@@ -145,36 +131,7 @@ class _OpportunityViewState extends State<OpportunityView> {
                               }),
                         ),
                         const SizedBox(width: 8),
-                        InkWell(
-                          onTap: () {
-                            final auth = FirebaseAuth.instance;
-                            // // remove the task title from the user's favorite list
-                            // FirebaseFirestore.instance
-                            //     .collection('users')
-                            //     .doc(auth.currentUser!.uid)
-                            //     .update({
-                            //   'favorites': FieldValue.arrayRemove([task.title])
-                            // });
-                            // // remove isFavorite field for each user in the task collection
-                            FirebaseFirestore.instance
-                                .collection('tasks')
-                                .doc(task.id)
-                                .update({
-                              'favorites': FieldValue.arrayRemove(
-                                  [auth.currentUser!.uid])
-                            });
-                            FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(auth.currentUser!.uid)
-                                .update({
-                              'favorites': FieldValue.arrayRemove([task.id])
-                            });
-
-                            ref.refresh(getFavoritesProvider);
-                          },
-                          child: Text('Save for later',
-                              style: AppStyle.kRegular12Inter),
-                        )
+                        Text('Save for later', style: AppStyle.kRegular12Inter)
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -249,22 +206,22 @@ class _OpportunityViewState extends State<OpportunityView> {
                     }).toList();
 
                     return RatingBar(
-                        initialRating: ratings.isEmpty
-                            ? 0
-                            : ratings[0]['rating'].toDouble(),
-                        itemSize: 24,
-                        direction: Axis.horizontal,
-                        allowHalfRating: false,
-                        itemCount: 5,
-                        ratingWidget: RatingWidget(
-                          full: const Icon(Icons.star, color: kBlueAccent),
-                          half: const Icon(Icons.favorite, color: kBlueAccent),
-                          empty: const Icon(Icons.star_border_outlined,
-                              color: kBlueAccent),
-                        ),
-                        itemPadding:
-                            const EdgeInsets.symmetric(horizontal: 4.0),
-                        onRatingUpdate: (rating) => updateRating(rating, task));
+                      initialRating:
+                          ratings.isEmpty ? 0 : ratings[0]['rating'].toDouble(),
+                      itemSize: 24,
+                      direction: Axis.horizontal,
+                      allowHalfRating: false,
+                      itemCount: 5,
+                      ratingWidget: RatingWidget(
+                        full: const Icon(Icons.star, color: kBlueAccent),
+                        half: const Icon(Icons.favorite, color: kBlueAccent),
+                        empty: const Icon(Icons.star_border_outlined,
+                            color: kBlueAccent),
+                      ),
+                      itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      onRatingUpdate: (rating) =>
+                          opportunity.updateRating(rating, task),
+                    );
                   }),
               const SizedBox(height: 32),
             ],
@@ -272,50 +229,6 @@ class _OpportunityViewState extends State<OpportunityView> {
         );
       }),
     );
-  }
-
-  void updateRating(rating, task) {
-    final auth = FirebaseAuth.instance;
-    final userDocRef = FirebaseFirestore.instance
-        .collection('users')
-        .doc(auth.currentUser!.uid);
-    final rate = {
-      'rating': rating,
-      'taskId': task.id,
-    };
-
-    userDocRef.get().then((docSnapshot) {
-      if (docSnapshot.exists) {
-        final data = docSnapshot.data();
-        final ratings = data?['ratings'] ?? [];
-
-        // Check if the task ID exists in the ratings array
-        final taskIndex =
-            ratings.indexWhere((rating) => rating['taskId'] == task.id);
-
-        if (taskIndex != -1) {
-          ratings[taskIndex]['rating'] = rating;
-          userDocRef.update({'ratings': ratings}).then((_) {
-            print('Rating updated successfully!');
-          }).catchError((error) {
-            print('Failed to update rating: $error');
-          });
-        } else {
-          // Task ID doesn't exist in the array, add the new rating
-          userDocRef.update({
-            'ratings': FieldValue.arrayUnion([rate])
-          }).then((_) {
-            print('Rating added successfully!');
-          }).catchError((error) {
-            print('Failed to add rating: $error');
-          });
-        }
-      } else {
-        print('User document does not exist.');
-      }
-    }).catchError((error) {
-      print('Error getting user document: $error');
-    });
   }
 
   Future<void> launchMaps(BuildContext context, String address) async {

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:volun_tek/globals.dart';
@@ -30,7 +29,7 @@ class TaskServices extends StateNotifier<bool> {
     try {
       for (final t in task) {
         print('Uploading task: ${t.id}');
-        await firestore.collection('trendingTasks').add(t.toJson());
+        await firestore.collection('trendingTasks').doc(t.id).set(t.toJson());
       }
     } catch (e) {
       throw Exception(e);

@@ -34,7 +34,10 @@ class Favourite extends StatelessWidget {
                 if(data.isEmpty) {
 
                   return const Center(
-                    child: Text('No Favourite Task'),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 18.0),
+                      child: Text('No Favourite Task'),
+                    ),
                   );
                 }
                 return ListView.separated(

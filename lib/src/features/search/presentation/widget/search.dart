@@ -59,7 +59,7 @@ class _SearchState extends ConsumerState<Search> {
             Expanded(
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection('trendingTasks')
+                    .collection('tasks')
                     .snapshots(),
                 builder: (context, snapshot) {
                   return (snapshot.connectionState == ConnectionState.waiting)

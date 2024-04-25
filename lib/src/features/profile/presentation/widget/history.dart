@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badge;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -5,6 +6,7 @@ import 'package:volun_tek/src/features/profile/presentation/widget/refactored/hi
 
 import '../../../../constants/app_style.dart';
 import '../../../../constants/colors.dart';
+import '../provider/user_provider.dart';
 import 'refactored/profile_tile.dart';
 import 'refactored/volunteer_type.dart';
 
@@ -55,15 +57,54 @@ class History extends StatelessWidget {
           const VolunteerType(),
           const SizedBox(height: 32),
           const Divider(color: kBlueAccent),
-          Consumer(
-            builder: (context, ref, child) {
-              return const HistoryCard();
-            }
-          ),
+          Consumer(builder: (context, ref, child) {
+            final history = ref.watch(getHistoryProvider);
+            return history.when(
+              data: (data) {
+                if(data.isEmpty) {
+                  return  Center(
+                    child: Text(
+                      'No History ',
+                      style: AppStyle.kRegular20,
+                    ),
+                  );
+                }
+                return Expanded(
+                  child: ListView.separated(
+                    itemCount: data.length,
+                    separatorBuilder: (context, index) => const Divider(
+                      color: kBlueAccent,
+                    ),
+                    itemBuilder: (context, index) {
+                      return HistoryCard(
+                        title: data[index].title,
+                         address: data[index].location,
+                        duration: data[index].time,
+                       time: Timestamp.now(),
+                      );
+                    },
+                  ),
+                );
+              },
+              error: (error, stackTrace) {
+                return Center(
+                  child: Text(
+                    'Error: $error',
+                    style: AppStyle.kHeading1.copyWith(
+                    ),
+                  ),
+                );
+              },
+              loading: () => const Center(
+                child: CircularProgressIndicator(
+                  color: kBlueAccent,
+                ),
+              )
+            );
+          }),
           const Divider(color: kBlueAccent),
         ],
       ),
     );
   }
 }
-

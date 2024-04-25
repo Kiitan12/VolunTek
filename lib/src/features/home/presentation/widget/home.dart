@@ -173,7 +173,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 3,
                                   crossAxisSpacing: 16,
-                                  childAspectRatio: 2.3,
+                                  mainAxisExtent: 40,
                                   mainAxisSpacing: 12,
                                 ),
                                 itemBuilder: (context, index) {

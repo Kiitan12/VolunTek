@@ -15,6 +15,17 @@ class ResetPasswordService extends StateNotifier<bool> {
   }) async {
     try {
       state = true;
+      // check if email is in the db
+      final user = await auth.fetchSignInMethodsForEmail(email);
+      if (user.isEmpty) {
+        snackBarKey.currentState!.showSnackBar(const SnackBar(
+          content: Text('Email not found'),
+          backgroundColor: Colors.red,
+        ));
+
+        state = false;
+        throw 'Email not found';
+      }
       await auth.sendPasswordResetEmail(email: email).then((value) {
         snackBarKey.currentState!.showSnackBar(const SnackBar(
           content: Text('Password reset link sent to your email'),

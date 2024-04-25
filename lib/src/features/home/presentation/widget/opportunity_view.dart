@@ -237,74 +237,34 @@ class _OpportunityViewState extends State<OpportunityView> {
                     }
 
                     final data = snapshot.data!.data() as Map<String, dynamic>;
-                    print(data['ratings']);
-
                     List<dynamic> ratings = data['ratings'] ?? [];
 
-                    ratings = ratings
-                        .where((rating) =>
-                            rating['taskId'] == task.id &&
-                            rating['taskId'] == null)
-                        .toList();
+                    ratings = ratings.where((rating) {
+                      if (rating['taskId'] == task.id &&
+                          rating['taskId'] != null) {
+                        return true;
+                      } else {
+                        return false;
+                      }
+                    }).toList();
 
                     return RatingBar(
-                      initialRating:
-                          ratings.isEmpty ? 0 : ratings[0]['rating'].toDouble(),
-                      itemSize: 24,
-                      direction: Axis.horizontal,
-                      allowHalfRating: false,
-                      itemCount: 5,
-                      ratingWidget: RatingWidget(
-                        full: const Icon(Icons.star, color: kBlueAccent),
-                        half: const Icon(Icons.favorite, color: kBlueAccent),
-                        empty: const Icon(Icons.star_border_outlined,
-                            color: kBlueAccent),
-                      ),
-                      itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      onRatingUpdate: (rating) {
-                        final auth = FirebaseAuth.instance;
-                        final userDocRef = FirebaseFirestore.instance
-                            .collection('users')
-                            .doc(auth.currentUser!.uid);
-                        final rate = {
-                          'rating': rating,
-                          'taskId': task.id,
-                        };
-
-                        userDocRef.get().then((docSnapshot) {
-                          if (docSnapshot.exists) {
-                            final data = docSnapshot.data();
-                            final ratings = data?['ratings'] ?? [];
-
-                            // Check if the task ID exists in the ratings array
-                            final taskIndex = ratings.indexWhere(
-                                (rating) => rating['taskId'] == task.id);
-
-                            if (taskIndex != -1) {
-                              ratings[taskIndex]['rating'] = rating;
-                              userDocRef.update({'ratings': ratings}).then((_) {
-                                print('Rating updated successfully!');
-                              }).catchError((error) {
-                                print('Failed to update rating: $error');
-                              });
-                            } else {
-                              // Task ID doesn't exist in the array, add the new rating
-                              userDocRef.update({
-                                'ratings': FieldValue.arrayUnion([rate])
-                              }).then((_) {
-                                print('Rating added successfully!');
-                              }).catchError((error) {
-                                print('Failed to add rating: $error');
-                              });
-                            }
-                          } else {
-                            print('User document does not exist.');
-                          }
-                        }).catchError((error) {
-                          print('Error getting user document: $error');
-                        });
-                      },
-                    );
+                        initialRating: ratings.isEmpty
+                            ? 0
+                            : ratings[0]['rating'].toDouble(),
+                        itemSize: 24,
+                        direction: Axis.horizontal,
+                        allowHalfRating: false,
+                        itemCount: 5,
+                        ratingWidget: RatingWidget(
+                          full: const Icon(Icons.star, color: kBlueAccent),
+                          half: const Icon(Icons.favorite, color: kBlueAccent),
+                          empty: const Icon(Icons.star_border_outlined,
+                              color: kBlueAccent),
+                        ),
+                        itemPadding:
+                            const EdgeInsets.symmetric(horizontal: 4.0),
+                        onRatingUpdate: (rating) => updateRating(rating, task));
                   }),
               const SizedBox(height: 32),
             ],
@@ -312,6 +272,50 @@ class _OpportunityViewState extends State<OpportunityView> {
         );
       }),
     );
+  }
+
+  void updateRating(rating, task) {
+    final auth = FirebaseAuth.instance;
+    final userDocRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(auth.currentUser!.uid);
+    final rate = {
+      'rating': rating,
+      'taskId': task.id,
+    };
+
+    userDocRef.get().then((docSnapshot) {
+      if (docSnapshot.exists) {
+        final data = docSnapshot.data();
+        final ratings = data?['ratings'] ?? [];
+
+        // Check if the task ID exists in the ratings array
+        final taskIndex =
+            ratings.indexWhere((rating) => rating['taskId'] == task.id);
+
+        if (taskIndex != -1) {
+          ratings[taskIndex]['rating'] = rating;
+          userDocRef.update({'ratings': ratings}).then((_) {
+            print('Rating updated successfully!');
+          }).catchError((error) {
+            print('Failed to update rating: $error');
+          });
+        } else {
+          // Task ID doesn't exist in the array, add the new rating
+          userDocRef.update({
+            'ratings': FieldValue.arrayUnion([rate])
+          }).then((_) {
+            print('Rating added successfully!');
+          }).catchError((error) {
+            print('Failed to add rating: $error');
+          });
+        }
+      } else {
+        print('User document does not exist.');
+      }
+    }).catchError((error) {
+      print('Error getting user document: $error');
+    });
   }
 
   Future<void> launchMaps(BuildContext context, String address) async {

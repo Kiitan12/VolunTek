@@ -1,19 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:volun_tek/src/features/home/presentation/widget/refactored/task_card.dart';
 
 import '../../../../constants/app_style.dart';
 import '../../../../constants/colors.dart';
+import '../../../../routing/routes.dart';
 import '../../../home/domain/model/task.dart';
+import '../../../home/presentation/provider/task_provider.dart';
 
-class Search extends StatefulWidget {
+class Search extends ConsumerStatefulWidget {
   const Search({super.key});
 
   @override
-  State<Search> createState() => _SearchState();
+  ConsumerState<Search> createState() => _SearchState();
 }
 
-class _SearchState extends State<Search> {
+class _SearchState extends ConsumerState<Search> {
   String name = '';
 
   @override
@@ -74,9 +77,15 @@ class _SearchState extends State<Search> {
                                 .map((doc) => Task.fromJson(doc.data()))
                                 .toList();
                             if (name.isEmpty) {
-                              return TaskCard(task: data[index]);
+                              return TaskCard(
+                                task: data[index],
+                                onTap: () {
+                                  ref.read(taskProvider.notifier).state =
+                                  data[index];
+                                  Navigator.pushNamed(context, opportunityView);
+                                },
+                              );
                             }
-
 
                             if (data[index]
                                     .title
@@ -86,7 +95,14 @@ class _SearchState extends State<Search> {
                                     .cause
                                     .toLowerCase()
                                     .contains(name.toLowerCase())) {
-                              return TaskCard(task: data[index]);
+                              return TaskCard(
+                                task: data[index],
+                                onTap: () {
+                                  ref.read(taskProvider.notifier).state =
+                                      data[index];
+                                  Navigator.pushNamed(context, opportunityView);
+                                },
+                              );
                             }
 
                             return Container();

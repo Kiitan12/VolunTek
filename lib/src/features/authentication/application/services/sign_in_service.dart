@@ -27,12 +27,12 @@ class SignInService extends StateNotifier<bool> {
     } on FirebaseAuthException catch (e) {
       state = false;
       snackBarKey.currentState!.showSnackBar(
-        SnackBar(
+        const SnackBar(
           backgroundColor: Colors.red,
-          content: Text(e.message ?? 'An error occurred'),
+          content: Text('Invalid email or password'),
         ),
       );
-      throw e.message ?? 'An error occurred';
+      throw 'Invalid email or password';
     }
   }
 }

@@ -24,3 +24,9 @@ final getFavoritesProvider = FutureProvider((ref) {
   return user.getFavorites();
 });
 
+final getHistoryProvider = FutureProvider((ref) {
+  final user = ref.watch(userServiceProvider);
+
+  return user.getInterestHistory();
+});
+

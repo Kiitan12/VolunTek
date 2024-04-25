@@ -71,7 +71,6 @@ class UserService extends StateNotifier<bool> {
       }
       state = false;
       return tasks;
-
     } catch (e) {
       state = false;
       rethrow;
@@ -83,7 +82,10 @@ class UserService extends StateNotifier<bool> {
     final userData = await firestore.collection('users').doc(user!.uid).get();
     final List<dynamic> favorites = userData.data()!['favorites'];
     favorites.add(taskId);
-    await firestore.collection('users').doc(user.uid).update({'favorites': favorites});
+    await firestore
+        .collection('users')
+        .doc(user.uid)
+        .update({'favorites': favorites});
   }
 
   Future<void> removeFavorite(String taskId) async {
@@ -91,24 +93,31 @@ class UserService extends StateNotifier<bool> {
     final userData = await firestore.collection('users').doc(user!.uid).get();
     final List<dynamic> favorites = userData.data()!['favorites'];
     favorites.remove(taskId);
-    await firestore.collection('users').doc(user.uid).update({'favorites': favorites});
+    await firestore
+        .collection('users')
+        .doc(user.uid)
+        .update({'favorites': favorites});
   }
 
   Future<List<Task>> getInterestHistory() async {
     try {
       state = true;
       final user = auth.currentUser;
-      final userData = await firestore.collection('users').doc(user!.uid).get();
-      final List<dynamic> history = userData.data()!['history'];
-      final List<Task> tasks = [];
-
-      for (final id in history) {
-        final task = await firestore.collection('trendingTask').doc(id).get();
-        tasks.add(Task.fromJson(task.data()!));
+      final userData = await firestore.collection('interests').get();
+      final List<dynamic> taskId = userData.docs.map((e) {
+        if (e.data()['uid'] == user!.uid) {
+          return e.data()['task_id'];
+        }
+      }).toList();
+      final tasks = await firestore.collection('tasks').get();
+      final List<Task> taskList = [];
+      for (final task in tasks.docs) {
+        if (taskId.contains(task.data()['id'])) {
+          taskList.add(Task.fromJson(task.data()));
+        }
       }
       state = false;
-      return tasks;
-
+      return taskList;
     } catch (e) {
       state = false;
       rethrow;

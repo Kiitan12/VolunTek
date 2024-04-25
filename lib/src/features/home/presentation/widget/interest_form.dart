@@ -7,6 +7,7 @@ import 'package:volun_tek/src/common_widgets/tek_text_field.dart';
 import 'package:volun_tek/src/constants/app_style.dart';
 import 'package:volun_tek/src/constants/colors.dart';
 import 'package:volun_tek/src/features/home/presentation/controller/interest_form_controller.dart';
+import 'package:volun_tek/src/features/profile/presentation/provider/user_provider.dart';
 
 import '../../../../utils/validation_helper.dart';
 import '../provider/task_provider.dart';
@@ -94,7 +95,9 @@ class _InterestFormState extends ConsumerState<InterestForm> {
                       : const Text('Submit'),
                   onPressed: () async {
                     if (widget.controller.formKey.currentState!.validate()) {
-                      ref.read(loadingTaskProvider.notifier).submitInterest(
+                      ref
+                          .read(loadingTaskProvider.notifier)
+                          .submitInterest(
                             task.id,
                             widget.controller.field1.text,
                             widget.controller.field2.text,
@@ -103,7 +106,8 @@ class _InterestFormState extends ConsumerState<InterestForm> {
                                 .doc(FirebaseAuth.instance.currentUser!.uid)
                                 .get()
                                 .then((value) => value.data()!['name']),
-                          );
+                          )
+                          .then((value) => ref.refresh(getHistoryProvider));
                     }
                   },
                 ),
